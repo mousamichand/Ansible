@@ -1,1 +1,89 @@
+---
+# This playbook will install zookeeper
 
+# Update repo
+- name: update apt
+  apt: update_cache=yes
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+# Install required software
+- name: install git wget curl vim openjdk-8
+  apt: pkg={{item}} install_recommends=no state=present
+  with_items:
+    - git
+    - wget
+    - curl
+    - perl
+    - vim
+    - openjdk-8-jre-headless
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+# Create a group for Zookeeper based on Morpheus input
+- name: Add zookeeper group
+  group:
+    name: "{{morpheus['customOptions']['fzookeeperGroup']}}"
+    state: present
+
+# Create a user for Zookeeper based on Morpheus input
+- name: Add zookeeper user
+  user:
+    name: "{{morpheus['customOptions']['fzookeeperUser']}}"
+    group: zookeeper
+    home: /var/lib/zookeeper
+    state: present
+
+# Create a data directory
+- name: make morpheus directories
+  file:
+    path: /data/zookeeper
+    state: directory
+    owner: "{{morpheus['customOptions']['fzookeeperUser']}}"
+    group: "{{morpheus['customOptions']['fzookeeperGroup']}}"
+
+# Download and extract Zookeeper binaries
+- name: download zookeeper source
+  get_url: url=https://dlcdn.apache.org/zookeeper/zookeeper-3.8.0/apache-zookeeper-3.8.0-bin.tar.gz dest=/opt
+
+- name: extract zookeeper source
+  unarchive: src=/opt/apache-zookeeper-3.8.0-bin.tar.gz dest=/opt copy=no
+
+- name: rename zookeeper directory
+  shell: 'mv /opt/apache-zookeeper-3.8.0-bin /opt/zookeeper'
+
+# Register the variable remote_file with the IPs of the Zookeeper nodes
+- name: slurp file
+  command: cat /tmp/ips
+  register: remote_file
+
+# Loop through remote_file
+- name: readloop
+  debug: 
+    msg: "{{ item }}"
+  loop: "{{ remote_file.stdout_lines }}"
+
+- name: copy zookeeper config file
+  template: src=zoo.cfg.j2 dest=/opt/zookeeper/conf/zoo.cfg mode=0644
+
+- name: generate myid
+  shell: "grep -i {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }} /opt/zookeeper/conf/zoo.cfg"
+  register: myid
+
+- name: write myid to a file
+  shell: echo "{{myid.stdout}}" | cut -f1 -d '=' | tr -d [a-z.] > /data/zookeeper/myid
+
+- name: Update ownership
+  ansible.builtin.file:
+    path: /opt/zookeeper
+    state: directory
+    recurse: yes
+    owner: "{{morpheus['customOptions']['fzookeeperUser']}}"
+    group: "{{morpheus['customOptions']['fzookeeperGroup']}}"
+
+- name: add systemctl file
+  template: src=zookeeper.service.j2 dest=/etc/systemd/system/zookeeper.service mode=0744
+
+- name: Enable zookeper service
+  ansible.builtin.systemd:
+    name: zookeeper.service
+    state: started
+    enabled: yes
