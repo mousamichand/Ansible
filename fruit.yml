@@ -1,6 +1,6 @@
 ---
   - name: "extra variable demo"
-    hosts: myhost
+    hosts: all
     connection: local
     vars:
       fruit: "banana"
