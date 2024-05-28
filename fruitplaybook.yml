@@ -3,7 +3,7 @@
     hosts: all
     connection: local
     vars:
-      fruit: "banana"
+      fruit: "{{mopheus['customOptions']['input1']}}"
     tasks:
 
     - name: "print message"
