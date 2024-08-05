@@ -8,4 +8,4 @@
     
     - name: Dump morpheus variable for this instance
       debug:
-        msg: "{{ hostvars[inventory_hostname]['morpheus'] | to_nice_yaml }}"
+        msg: "{{ hostvars[inventory_hostname]['morpheus'] | ansible.builtin.to_nice_json }}"
