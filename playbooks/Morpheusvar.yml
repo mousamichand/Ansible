@@ -1,12 +1,11 @@
-- name: Base Linux Installs
-    hosts: all
-    gather_facts: true
-    become: true
+---
+- hosts: all
+  gather_facts: true
     
     vars:
       instanceName: "{{ morpheus['instance']['containers']['name'] }}"
-   tasks:
-   - name: Print return information from the previous task
-     ansible.builtin.debug:
-     var: instanceName
-    verbosity: 2   
+    tasks:
+    - name: Print return information from the previous task
+      ansible.builtin.debug:
+      var: instanceName
+      verbosity: 2   
