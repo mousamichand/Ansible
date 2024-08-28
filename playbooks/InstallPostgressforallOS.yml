@@ -4,11 +4,12 @@
   become: yes
   tasks:
     - name: Set up PostgreSQL repository for Ubuntu
+      lineinfile:
+        path: /etc/apt/sources.list.d/pgdg.list
+        line: "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+        create: true
       when: ansible_facts['os_family'] == 'Debian'
-      apt_repository:
-        repo: 'deb https://apt.postgresql.org/pub/repos/apt/ focal-pgdg main'
-        state: present
-        filename: 'pgdg'
+      
         
     - name: Add PostgreSQL APT repository key for Ubuntu
       when: ansible_facts['os_family'] == 'Debian'
