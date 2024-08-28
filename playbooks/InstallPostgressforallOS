@@ -1,0 +1,65 @@
+---
+- name: Install PostgreSQL on Ubuntu, RHEL 8, and CentOS
+  hosts: all
+  become: yes
+  tasks:
+    - name: Set up PostgreSQL repository for Ubuntu
+      when: ansible_facts['os_family'] == 'Debian'
+      apt_repository:
+        repo: 'deb http://apt.postgresql.org/pub/repos/apt/ focal-pgdg main'
+        state: present
+        filename: 'pgdg'
+        
+    - name: Add PostgreSQL APT repository key for Ubuntu
+      when: ansible_facts['os_family'] == 'Debian'
+      apt_key:
+        url: 'https://www.postgresql.org/media/keys/ACCC4CF8.asc'
+        state: present
+
+    - name: Install PostgreSQL for Ubuntu
+      when: ansible_facts['os_family'] == 'Debian'
+      apt:
+        name: postgresql-15
+        state: present
+        update_cache: yes
+
+    - name: Install PostgreSQL repository RPM for RHEL 8 and CentOS
+      when: ansible_facts['os_family'] == 'RedHat'
+      rpm_key:
+        state: present
+        key: https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG
+
+    - name: Install PostgreSQL repository for RHEL 8 and CentOS
+      when: ansible_facts['os_family'] == 'RedHat'
+      yum_repository:
+        name: pgdg
+        description: PostgreSQL Repository
+        baseurl: https://download.postgresql.org/pub/repos/yum/15/redhat/rhel-8-x86_64/
+        enabled: yes
+        gpgcheck: yes
+        gpgkey: https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG
+
+    - name: Install PostgreSQL for RHEL 8 and CentOS
+      when: ansible_facts['os_family'] == 'RedHat'
+      dnf:
+        name: postgresql15-server
+        state: present
+
+    - name: Ensure PostgreSQL service is started and enabled
+      systemd:
+        name: postgresql
+        state: started
+        enabled: yes
+
+    - name: Initialize PostgreSQL database (RHEL 8 and CentOS)
+      when: ansible_facts['os_family'] == 'RedHat'
+      command: /usr/pgsql-15/bin/postgresql-15-setup initdb
+      args:
+        creates: /var/lib/pgsql/15/data/PG_VERSION
+
+    - name: Ensure PostgreSQL service is started and enabled (Ubuntu)
+      when: ansible_facts['os_family'] == 'Debian'
+      systemd:
+        name: postgresql
+        state: started
+        enabled: yes
