@@ -6,7 +6,7 @@
     - name: Set up PostgreSQL repository for Ubuntu
       when: ansible_facts['os_family'] == 'Debian'
       apt_repository:
-        repo: 'deb http://apt.postgresql.org/pub/repos/apt/ focal-pgdg main'
+        repo: 'deb https://apt.postgresql.org/pub/repos/apt/ focal-pgdg main'
         state: present
         filename: 'pgdg'
         
