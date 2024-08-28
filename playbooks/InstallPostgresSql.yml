@@ -8,10 +8,20 @@
     postgresql_service: postgresql-{{ postgresql_version }}
     
   tasks:
+    - name: Install PostgreSQL repository RPM for RHEL 8 and CentOS
+      when: ansible_facts['os_family'] == 'RedHat'
+      rpm_key:
+        state: present
+        key: https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG
+        
     - name: Install PostgreSQL repository
       ansible.builtin.yum:
         name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-{{ ansible_distribution_major_version }}-x86_64/pgdg-redhat-repo-latest.noarch.rpm
         state: present
+        enabled: yes
+        gpgcheck: yes
+        gpgkey: https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG
+
       when: ansible_os_family == "RedHat"
 
     - name: Install PostgreSQL
