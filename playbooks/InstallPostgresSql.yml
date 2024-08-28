@@ -1,20 +1,73 @@
 ---
-- name: Install PostgreSQL on Ubuntu 22.04
+- name: Install and configure PostgreSQL
   hosts: all
-  become: yes
-
+  become: true
+  vars:
+    postgresql_version: 14
+    postgresql_data_dir: /var/lib/pgsql/{{ postgresql_version }}/data
+    postgresql_service: postgresql-{{ postgresql_version }}
+    
   tasks:
-    - name: Update apt package index
-      apt:
-        update_cache: yes
+    - name: Install PostgreSQL repository
+      ansible.builtin.yum:
+        name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-{{ ansible_distribution_major_version }}-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+        state: present
+      when: ansible_os_family == "RedHat"
 
     - name: Install PostgreSQL
-      apt:
+      ansible.builtin.yum:
+        name: 
+          - postgresql{{ postgresql_version }}
+          - postgresql{{ postgresql_version }}-server
+          - postgresql{{ postgresql_version }}-contrib
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Initialize PostgreSQL Database
+      ansible.builtin.command: "/usr/pgsql-{{ postgresql_version }}/bin/postgresql-{{ postgresql_version }}-setup initdb"
+      when: ansible_os_family == "RedHat"
+
+    - name: Ensure PostgreSQL service is running and enabled
+      ansible.builtin.systemd:
+        name: "{{ postgresql_service }}"
+        enabled: yes
+        state: started
+
+    - name: Install PostgreSQL client on Debian/Ubuntu
+      ansible.builtin.apt:
+        name: 
+          - postgresql-client
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Ensure PostgreSQL service is running and enabled on Debian/Ubuntu
+      ansible.builtin.systemd:
         name: postgresql
+        enabled: yes
+        state: started
+
+    - name: Install PostgreSQL client on RedHat/CentOS
+      ansible.builtin.yum:
+        name: 
+          - postgresql{{ postgresql_version }}-client
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Create a PostgreSQL database
+      community.postgresql.postgresql_db:
+        name: exampledb
         state: present
 
-    - name: Ensure PostgreSQL service is enabled and started
-      service:
-        name: postgresql
-        state: started
-        enabled: yes
+    - name: Create a PostgreSQL user
+      community.postgresql.postgresql_user:
+        name: exampleuser
+        password: secretpassword
+        priv: "ALL"
+        state: present
+
+    - name: Grant privileges on the database
+      community.postgresql.postgresql_privs:
+        database: exampledb
+        roles: exampleuser
+        type: database
+        privs: ALL
