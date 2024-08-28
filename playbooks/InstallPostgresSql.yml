@@ -42,7 +42,19 @@
         name: "{{ postgresql_service }}"
         enabled: yes
         state: started
+        
+   - name: Add PostgreSQL APT repository key for Ubuntu
+      when: ansible_facts['os_family'] == 'Debian'
+      apt_key:
+        url: 'https://www.postgresql.org/media/keys/ACCC4CF8.asc'
+        state: present
 
+    - name: Install PostgreSQL for Ubuntu
+      when: ansible_facts['os_family'] == 'Debian'
+      apt:
+        name: postgresql-{{ postgresql_version }}
+        state: present
+        update_cache: yes
     - name: Install PostgreSQL client on Debian/Ubuntu
       ansible.builtin.apt:
         name: 
