@@ -67,6 +67,7 @@
         name: postgresql
         enabled: yes
         state: started
+      when: ansible_os_family == "Debian" 
 
     - name: Install PostgreSQL client on RedHat/CentOS
       ansible.builtin.yum:
