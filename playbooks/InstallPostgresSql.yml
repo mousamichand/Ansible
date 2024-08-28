@@ -43,7 +43,7 @@
         enabled: yes
         state: started
         
-   - name: Add PostgreSQL APT repository key for Ubuntu
+    - name: Add PostgreSQL APT repository key for Ubuntu
       when: ansible_facts['os_family'] == 'Debian'
       apt_key:
         url: 'https://www.postgresql.org/media/keys/ACCC4CF8.asc'
