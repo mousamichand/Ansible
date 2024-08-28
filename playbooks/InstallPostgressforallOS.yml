@@ -35,7 +35,7 @@
       yum_repository:
         name: pgdg
         description: PostgreSQL Repository
-        baseurl: https://download.postgresql.org/pub/repos/yum/15/redhat/rhel-8-x86_64/
+        baseurl: https://download.postgresql.org/pub/repos/yum/15/redhat/rhel-9-x86
         enabled: yes
         gpgcheck: yes
         gpgkey: https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG
