@@ -55,12 +55,7 @@
         name: postgresql-{{ postgresql_version }}
         state: present
         update_cache: yes
-    - name: Install PostgreSQL client on Debian/Ubuntu
-      ansible.builtin.apt:
-        name: 
-          - postgresql-client
-        state: present
-      when: ansible_os_family == "Debian"
+    
 
     - name: Ensure PostgreSQL service is running and enabled on Debian/Ubuntu
       ansible.builtin.systemd:
