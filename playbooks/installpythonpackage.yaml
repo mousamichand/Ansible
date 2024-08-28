@@ -1,3 +1,9 @@
+---
+- name: Install and configure python package
+  hosts: all
+  become: true
+   
+  tasks:
 - name: Install psycopg2
   ansible.builtin.yum:
     name: python3-psycopg2
