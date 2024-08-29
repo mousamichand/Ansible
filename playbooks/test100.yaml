@@ -6,7 +6,8 @@
     postgresql_version: 15
     postgresql_data_dir: /var/lib/pgsql/{{ postgresql_version }}/data
     postgresql_service: postgresql-{{ postgresql_version }}
-    
+  debug:
+        var: ansible_os_family   
   tasks:        
     - name: Set up PostgreSQL repository for Ubuntu
       lineinfile:
