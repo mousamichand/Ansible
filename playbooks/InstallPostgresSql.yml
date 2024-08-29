@@ -6,7 +6,8 @@
     postgresql_version: 15
     postgresql_data_dir: /var/lib/pgsql/{{ postgresql_version }}/data
     postgresql_service: postgresql-{{ postgresql_version }}
-    
+  debug:
+        var: ansible_os_family    
   tasks:
     - name: Install PostgreSQL repository RPM for RHEL 8 and CentOS
       when: ansible_facts['os_family'] == 'RedHat'
