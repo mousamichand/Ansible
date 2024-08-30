@@ -89,7 +89,7 @@
        name: postgres
        password: "{{ postgres_password }}"
        role_attr_flags: SUPERUSER
-     become_user: postgres
+      become_user: postgres
 
     - name: Create a PostgreSQL database
       community.postgresql.postgresql_db:
