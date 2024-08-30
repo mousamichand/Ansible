@@ -96,4 +96,8 @@
         type: database
         privs: ALL
 
-    
+ handlers:
+    - name: Reload PostgreSQL
+      ansible.builtin.systemd:
+        name: "{{ postgresql_service }}"
+        state: reloaded 
