@@ -1,0 +1,55 @@
+---
+- name: Install different versions of MariaDB on RHEL/CentOS and Ubuntu
+  hosts: all
+  become: true
+  vars:
+    mariadb_version: "10.5"  # Default MariaDB version, customize per host/group
+
+  tasks:
+    - name: Install MariaDB on RHEL/CentOS
+      block:
+        - name: Add MariaDB repository for RHEL/CentOS
+          ansible.builtin.yum_repository:
+            name: MariaDB
+            description: MariaDB Repository
+            baseurl: "http://yum.mariadb.org/{{ mariadb_version }}/rhel{{ ansible_distribution_major_version }}-amd64"
+            gpgkey: "https://yum.mariadb.org/RPM-GPG-KEY-MariaDB"
+            gpgcheck: yes
+            state: present
+          when: ansible_os_family == "RedHat"
+
+        - name: Install MariaDB server on RHEL/CentOS
+          ansible.builtin.yum:
+            name: mariadb-server
+            state: present
+          when: ansible_os_family == "RedHat"
+
+        - name: Enable and start MariaDB service on RHEL/CentOS
+          ansible.builtin.systemd:
+            name: mariadb
+            enabled: yes
+            state: started
+          when: ansible_os_family == "RedHat"
+
+    - name: Install MariaDB on Ubuntu
+      block:
+        - name: Add MariaDB repository for Ubuntu
+          ansible.builtin.apt_repository:
+            repo: "deb [arch=amd64] http://mirror.ossplanet.net/mariadb/repo/{{ mariadb_version }}/ubuntu {{ ansible_lsb.codename }} main"
+            state: present
+            filename: "mariadb"
+          when: ansible_os_family == "Debian"
+
+        - name: Install MariaDB server on Ubuntu
+          ansible.builtin.apt:
+            name: mariadb-server
+            state: present
+            update_cache: yes
+          when: ansible_os_family == "Debian"
+
+        - name: Enable and start MariaDB service on Ubuntu
+          ansible.builtin.systemd:
+            name: mariadb
+            enabled: yes
+            state: started
+          when: ansible_os_family == "Debian"
