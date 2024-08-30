@@ -90,7 +90,12 @@
        password: "{{ postgres_password }}"
        role_attr_flags: SUPERUSER
       become_user: postgres
-
+   - name: Ensure permissions on temporary files
+     ansible.builtin.file:
+       path: /path/to/tempfile
+       mode: '0644'
+       state: touch
+     become: true
     - name: Create a PostgreSQL database
       community.postgresql.postgresql_db:
         name: exampledb
