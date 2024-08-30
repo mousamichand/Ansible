@@ -89,7 +89,7 @@
        path: /temp
        mode: '0644'
        state: touch
-     become: true  
+      become: true  
     - name: Set password for postgres user
       community.postgresql.postgresql_user:
        name: postgres
