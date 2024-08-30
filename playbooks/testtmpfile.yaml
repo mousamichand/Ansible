@@ -1,0 +1,14 @@
+---
+- name: Test playbook
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Create a test file
+      ansible.builtin.file:
+        path: /tmp/testfile
+        state: touch
+
+    - name: Set permissions on test file
+      ansible.builtin.file:
+        path: /tmp/testfile
+        mode: '0644'
