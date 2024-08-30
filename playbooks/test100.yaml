@@ -85,7 +85,7 @@
       notify: Reload PostgreSQL
       when: ansible_os_family == "Debian" 
     - name: Ensure permissions on temporary files
-     ansible.builtin.file:
+      ansible.builtin.file:
        path: /temp
        mode: '0644'
        state: touch
