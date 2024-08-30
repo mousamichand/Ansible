@@ -62,7 +62,21 @@
         name: postgresql-{{ postgresql_version }}
         state: present
         update_cache: yes
-        
+    - name: Modify pg_hba.conf to use md5 authentication for all local connections
+      ansible.builtin.replace:
+        path: /var/lib/pgsql/{{ postgresql_version }}/data/pg_hba.conf
+        regexp: '^local\s+all\s+all\s+peer$'
+        replace: 'local   all             all                                     md5'
+      notify: Reload PostgreSQL
+      when: ansible_os_family == "RedHat"
+
+    - name: Modify pg_hba.conf to use md5 authentication for all local connections (Debian/Ubuntu)
+      ansible.builtin.replace:
+        path: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
+        regexp: '^local\s+all\s+all\s+peer$'
+        replace: 'local   all             all                                     md5'
+      notify: Reload PostgreSQL
+      when: ansible_os_family == "Debian"    
     - name: Create a PostgreSQL database
       community.postgresql.postgresql_db:
         name: exampledb
