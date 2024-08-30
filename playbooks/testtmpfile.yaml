@@ -1,6 +1,6 @@
 ---
 - name: Test playbook
-  hosts: localhost
+  hosts: all
   become: true
   tasks:
     - name: Create a test file
