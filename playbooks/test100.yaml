@@ -94,9 +94,7 @@
         name: exampledb
         state: present
         password: "test123"
-      become: true
-      become_user: postgres
-
+     
   handlers:
     - name: Reload PostgreSQL
       ansible.builtin.systemd:
