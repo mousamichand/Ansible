@@ -91,7 +91,7 @@
         password: "{{ 'Test123' | password_hash('md5') }}"
         encrypted: yes  # Ensure the password is hashed (md5 for PostgreSQL)
       # Only apply if the password is not already set
-      when: not postgres_password_set
+     
 
     - name: Verify that the postgres user password is set
       shell: psql -c "SELECT 1"
