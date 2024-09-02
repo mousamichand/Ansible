@@ -6,7 +6,7 @@
     postgresql_version: 15
     postgresql_data_dir: /var/lib/pgsql/{{ postgresql_version }}/data
     postgresql_service: postgresql-{{ postgresql_version }}
-    postgres_password : "test123"
+    postgres_password : ""
   
   tasks:        
     - name: Print the ansible_os_family fact
@@ -89,9 +89,7 @@
       community.postgresql.postgresql_user:
        name: postgres
        password: "{{ postgres_password }}"
-       role_attr_flags: SUPERUSER
-      become_method: su 
-      become_user: postgres
+     
       
    
     - name: Create a PostgreSQL database
