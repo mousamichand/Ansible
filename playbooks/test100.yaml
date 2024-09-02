@@ -94,7 +94,7 @@
       community.postgresql.postgresql_db:
         name: testdb123
         login_user: postgres
-        login_password: "test123" 
+        login_password: "" 
      
   handlers:
     - name: Reload PostgreSQL
