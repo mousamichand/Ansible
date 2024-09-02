@@ -92,8 +92,7 @@
     - name: Create a PostgreSQL database
       community.postgresql.postgresql_db:
         name: exampledb
-        state: present
-        password: "test123"
+        comment: my test db
      
   handlers:
     - name: Reload PostgreSQL
