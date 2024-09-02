@@ -2,7 +2,7 @@
 - name: Test becoming postgres user
   hosts: all
   become: yes
-  become_user: postgres
+  become_user: mchandli
   tasks:
     - name: Check if we can become postgres user
       command: whoami
