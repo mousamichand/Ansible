@@ -1,6 +1,6 @@
 ---
 - name: Test becoming postgres user
-  hosts: db_servers
+  hosts: all
   become: yes
   become_user: postgres
   tasks:
