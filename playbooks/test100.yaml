@@ -95,14 +95,14 @@
       community.postgresql.postgresql_info:
        filter: ver*,ext*
        
-     - name: Create PostgreSQL user
-       community.postgresql.postgresql_user:
+    - name: Create PostgreSQL user
+      community.postgresql.postgresql_user:
         name: testuser
         password: test123
         login_user: "postgres"
         login_password: ""
         state: present
-       register: create_user_result
+      register: create_user_result
 
     - name: Debug user creation result
       ansible.builtin.debug:
