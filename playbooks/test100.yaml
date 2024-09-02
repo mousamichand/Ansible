@@ -84,7 +84,8 @@
         replace: 'local   all             all                                     md5'
       notify: Reload PostgreSQL
       when: ansible_os_family == "Debian" 
-   - name: Ensure the postgres user has a password
+      
+    - name: Ensure the postgres user has a password
       postgresql_user:
         name: postgres
         password: "{{ 'Test123' | password_hash('md5') }}"
@@ -92,21 +93,21 @@
       # Only apply if the password is not already set
       when: not postgres_password_set
 
-  - name: Verify that the postgres user password is set
+   - name: Verify that the postgres user password is set
       shell: psql -c "SELECT 1"
       register: result
       failed_when: result.rc != 0
       changed_when: false
       become_user: postgres
 
-  - name: Set postgres_password_set variable
+   - name: Set postgres_password_set variable
       set_fact:
         postgres_password_set: "{{ result.rc == 0 }}"
     
      
       
    
-  - name: Create a PostgreSQL database
+   - name: Create a PostgreSQL database
       community.postgresql.postgresql_db:
         name: testdb123
         login_user: postgres
