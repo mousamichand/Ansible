@@ -1,0 +1,13 @@
+---
+- name: Test becoming postgres user
+  hosts: db_servers
+  become: yes
+  become_user: postgres
+  tasks:
+    - name: Check if we can become postgres user
+      command: whoami
+      register: result
+
+    - name: Print the result
+      debug:
+        msg: "The current user is {{ result.stdout }}"
