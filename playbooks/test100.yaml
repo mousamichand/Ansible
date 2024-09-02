@@ -85,10 +85,7 @@
       notify: Reload PostgreSQL
       when: ansible_os_family == "Debian" 
     
-    - name: Set password for postgres user
-      community.postgresql.postgresql_user:
-       name: postgres
-       password: "{{ postgres_password }}"
+    
      
       
    
@@ -96,20 +93,9 @@
       community.postgresql.postgresql_db:
         name: exampledb
         state: present
-
-    - name: Create a PostgreSQL user
-      community.postgresql.postgresql_user:
-        name: exampleuser
-        password: secretpassword
-        priv: "ALL"
-        state: present
-
-    - name: Grant privileges on the database
-      community.postgresql.postgresql_privs:
-        database: exampledb
-        roles: exampleuser
-        type: database
-        privs: ALL
+        password: "test123"
+      become: true
+      become_user: postgres
 
   handlers:
     - name: Reload PostgreSQL
