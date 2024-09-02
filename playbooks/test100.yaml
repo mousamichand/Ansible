@@ -106,7 +106,7 @@
      
       
    
-    - name: Create a PostgreSQL database
+  - name: Create a PostgreSQL database
       community.postgresql.postgresql_db:
         name: testdb123
         login_user: postgres
