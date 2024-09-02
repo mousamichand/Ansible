@@ -95,10 +95,18 @@
       community.postgresql.postgresql_info:
        filter: ver*,ext*
        
-    - name: Connect to acme database, create django user, and grant access to database and products table
+     - name: Create PostgreSQL user
       community.postgresql.postgresql_user:
-       name: django
-       password: ceec4eif7ya
+        name: testuser
+        password: test123
+        login_user: "postgres"
+        login_password: ""
+        state: present
+      register: create_user_result
+
+    - name: Debug user creation result
+      ansible.builtin.debug:
+        msg: "User testuser creation result: {{ create_user_result }}"
           
      
       
