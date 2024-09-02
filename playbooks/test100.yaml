@@ -97,7 +97,6 @@
        
    - name: Connect to acme database, create django user, and grant access to database and products table
      community.postgresql.postgresql_user:
-      db: acme
       name: django
       password: ceec4eif7ya
           
