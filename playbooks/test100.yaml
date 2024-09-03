@@ -89,7 +89,7 @@
        
       notify: Reload PostgreSQL
       when: ansible_os_family == "Debian" 
-     - name: Modify pg_hba.conf to use trust authentication for all local connections (Debian/Ubuntu)
+    - name: Modify pg_hba.conf to use trust authentication for all local connections (Debian/Ubuntu)
       ansible.builtin.replace:
         path: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
         regexp: '^local\s+all\s+postgres\s+peer$'
