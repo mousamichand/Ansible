@@ -88,7 +88,7 @@
         replace: 'local   all            postgres                                 trust'
       notify: Reload PostgreSQL
       when: ansible_os_family == "RedHat"    
-   - name: Restart PostgreSQL service
+    - name: Restart PostgreSQL service
       ansible.builtin.service:
        name: {{ postgresql_service }}
        state: restarted
