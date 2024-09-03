@@ -132,3 +132,4 @@
       ansible.builtin.systemd:
         name: "{{ postgresql_service }}"
         state: reloaded 
+      when: ansible_os_family == "RedHat"  
