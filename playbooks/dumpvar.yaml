@@ -10,7 +10,5 @@
       debug:
         msg: "{{ hostvars[inventory_hostname]['morpheus'] | to_nice_yaml }}"
 
-    - name: print morpheus agent variable 
-      debug:
-        msg: "{{ hostvars[inventory_hostname]['morpheus']['account'] | to_nice_yaml }}"
+    
         
