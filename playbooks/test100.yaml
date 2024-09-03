@@ -86,12 +86,17 @@
         path: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
         regexp: '^local\s+all\s+all\s+peer$'
         replace: 'local   all             all                                     trust'
-        path: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
-        regexp: '^local\s+all\s+postgres\s+peer$'
-        replace: 'local   all             postgres                                    trust'
+       
       notify: Reload PostgreSQL
       when: ansible_os_family == "Debian" 
-      
+     - name: Modify pg_hba.conf to use trust authentication for all local connections (Debian/Ubuntu)
+      ansible.builtin.replace:
+        path: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
+        regexp: '^local\s+all\s+postgres\s+peer$'
+        replace: 'local   all            postgres                                     trust'
+       
+      notify: Reload PostgreSQL
+      when: ansible_os_family == "Debian"    
     - name: Collect PostgreSQL version and extensions
       become: true
       become_user: postgres
