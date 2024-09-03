@@ -85,7 +85,7 @@
       ansible.builtin.replace:
         path: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
         regexp: '^local\s+all\s+all\s+peer$'
-        replace: 'local   all             all                                     md5'
+        replace: 'local   all             all                                     trust'
       notify: Reload PostgreSQL
       when: ansible_os_family == "Debian" 
       
