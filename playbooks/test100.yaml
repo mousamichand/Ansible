@@ -3,7 +3,7 @@
   hosts: all
   become: true
   vars:
-    postgresql_version: 15
+    postgresql_version: " {{ hostvars[inventory_hostname]['morpheus']['customOptions']['PostgresVer'] }}"
     postgresql_data_dir: /var/lib/pgsql/{{ postgresql_version }}/data
     postgresql_service: postgresql-{{ postgresql_version }}
     postgres_password : ""
