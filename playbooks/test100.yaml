@@ -97,11 +97,16 @@
        
       notify: Reload PostgreSQL
       when: ansible_os_family == "Debian"    
+    - name: Reload PostgreSQL
+      ansible.builtin.systemd:
+        name:  postgresql
+        state: reloaded   
     - name: Collect PostgreSQL version and extensions
       become: true
       become_user: postgres
       community.postgresql.postgresql_info:
        filter: ver*,ext*
+       
        
     - name: Create PostgreSQL user
       community.postgresql.postgresql_user:
