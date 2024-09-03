@@ -101,7 +101,7 @@
       ansible.builtin.service:
        name: postgresql
        state: restarted
-      become: yes
+      when: ansible_facts['os_family'] == 'Debian'
    
     - name: Collect PostgreSQL version and extensions
       become: true
