@@ -83,7 +83,7 @@
       
     - name: Modify pg_hba.conf to use trust authentication for all local connections (Red Hat)
       ansible.builtin.replace:
-        path: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
+        path: /var/lib/pgsql/{{ postgresql_version }}/main/pg_hba.conf
         regexp: '^local\s+all\s+postgres\s+peer$'
         replace: 'local   all            postgres                                 trust'
       notify: Reload PostgreSQL
