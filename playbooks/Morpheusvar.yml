@@ -5,7 +5,7 @@
   vars:
       instanceName: "{{ morpheus['instance']['containers']['name'] }}"
     tasks:
-     - name: Print return information from the previous task
-       ansible.builtin.debug:
-       var: instanceName
-       verbosity: 2   
+      - name: Print return information from the previous task
+        ansible.builtin.debug:
+         var: instanceName
+         verbosity: 2   
