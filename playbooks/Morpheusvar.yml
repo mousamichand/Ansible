@@ -2,7 +2,7 @@
 - hosts: all
   gather_facts: true
     
-    vars:
+  vars:
       instanceName: "{{ morpheus['instance']['containers']['name'] }}"
     tasks:
     - name: Print return information from the previous task
