@@ -97,11 +97,7 @@
        
       notify: Reload PostgreSQL
       when: ansible_os_family == "Debian"    
-    - name: Restart PostgreSQL service
-      ansible.builtin.systemd:
-        name: postgresql
-        state: restarted
-      when: ansible_os_family == "Debian"   
+       
     - name: Collect PostgreSQL version and extensions
       become: true
       become_user: postgres
@@ -122,8 +118,7 @@
       ansible.builtin.debug:
         msg: "User testuser creation result: {{ create_user_result }}"
           
-     
-      
+       
    
     
      
