@@ -2,7 +2,7 @@
 - hosts: all
   gather_facts: true
   vars:
-   postgrevsersion : "{{ hostvars[inventory_hostname]['morpheus']['customOptions']['PostgresVer'}}"
+   postgrevsersion : "{{ hostvars[inventory_hostname]['morpheus']['customOptions']['PostgresVer'] }}"
   tasks:
     - name: Dump All hostvars for this instance
       debug:
