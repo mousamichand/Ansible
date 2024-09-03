@@ -1,8 +1,7 @@
 ---
 - hosts: all
   gather_facts: true
-  vars:
-    testvar : "{{ hostvars[inventory_hostname]['morpheus']"
+  
   tasks:
     - name: Dump All hostvars for this instance
       debug:
@@ -10,9 +9,7 @@
     
     - name: Dump morpheus variable for this instance
       debug:
-        msg: "{{ hostvars[inventory_hostname]['morpheus'] | to_nice_yaml }}"
-    - name: print input 8 value
-      debug:
-        msg: "{{ testvar }}"
+        msg: "{{ hostvars[inventory_hostname]['morpheus']['firstname'] | to_nice_yaml }}"
+   
     
         
