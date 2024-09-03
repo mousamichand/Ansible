@@ -9,7 +9,7 @@
     - name: Dump morpheus variable for this instance
       debug:
         msg: "{{ hostvars[inventory_hostname]['morpheus'] | to_nice_yaml }}"
-   - name: print input 8 value
+    - name: print input 8 value
       debug:
         msg: "{{ hostvars[inventory_hostname]['morpheus']['input8'] | to_nice_yaml }}"
     
