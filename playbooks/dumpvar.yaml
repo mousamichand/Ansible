@@ -9,7 +9,7 @@
     
     - name: Dump morpheus variable for this instance
       debug:
-        msg: "{{ hostvars[inventory_hostname]['morpheus']['firstname'] | to_nice_yaml }}"
+        msg: "{{ hostvars[inventory_hostname]['morpheus']['customOptions']['input8'] | to_nice_yaml }}"
    
     
         
