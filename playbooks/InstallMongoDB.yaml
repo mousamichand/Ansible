@@ -1,45 +1,63 @@
 ---
-- name: Install MongoDB on Red Hat/CentOS and Ubuntu
+- name: Install and Configure MongoDB
   hosts: all
   become: yes
+  vars:
+    mongodb_version: "6.0"  # Adjust version as needed
 
   tasks:
     - name: Determine OS distribution
       ansible.builtin.setup:
         filter: ansible_distribution
 
-    - name: Install MongoDB on Ubuntu
-      when: ansible_distribution == "Ubuntu"
-      apt:
-        name: mongodb
-        state: present
-        update_cache: yes
-
     - name: Add MongoDB repository for Ubuntu
       when: ansible_distribution == "Ubuntu"
       apt_repository:
-        repo: 'deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu {{ ansible_lsb.codename }} mongodb-org 6.0'
+        repo: 'deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu {{ ansible_lsb.codename }} mongodb-org {{ mongodb_version }}'
         state: present
         filename: mongodb
-
-    - name: Install MongoDB on Red Hat/CentOS
-      when: ansible_distribution == "RedHat"
-      yum:
-        name: mongodb-org
-        state: present
 
     - name: Add MongoDB repository for Red Hat/CentOS
       when: ansible_distribution == "RedHat"
       yum_repository:
-        name: mongodb-org-6.0
-        description: MongoDB 6.0 Repository
+        name: mongodb-org-{{ mongodb_version }}
+        description: MongoDB {{ mongodb_version }} Repository
         baseurl: https://repo.mongodb.org/yum/redhat/$releasever/$basearch/
         gpgcheck: 1
-        gpgkey: https://www.mongodb.org/static/pgp/server-6.0.asc
+        gpgkey: https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc
         enabled: 1
+
+    - name: Install MongoDB package
+      apt:
+        name: mongodb-org
+        state: present
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install MongoDB package
+      yum:
+        name: mongodb-org
+        state: present
+      when: ansible_distribution == "RedHat"
 
     - name: Start and enable MongoDB service
       service:
         name: mongod
         state: started
         enabled: yes
+
+    - name: Create a MongoDB database
+      community.mongodb.mongodb:
+        login_user: admin
+        login_password: adminpass
+        name: mydatabase
+        state: present
+      delegate_to: localhost
+
+    - name: Create a MongoDB collection
+      community.mongodb.mongodb:
+        login_user: admin
+        login_password: adminpass
+        database: mydatabase
+        collection: mycollection
+        state: present
+      delegate_to: localhost
