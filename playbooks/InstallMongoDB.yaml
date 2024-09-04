@@ -9,15 +9,15 @@
     - name: Add MongoDB repository for Ubuntu
       when: ansible_distribution == "Ubuntu"
       apt_repository:
-        repo: 'deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu {{ ansible_lsb.codename }}/mongodb-org/{{ mongodb_version }} multiverse'
+        repo: 'deb [ arch=amd64 signed-by=/usr/share/keyrings/mongodb-org-archive-keyring.gpg ] https://repo.mongodb.org/apt/ubuntu {{ ansible_lsb.codename }}/mongodb-org/{{ mongodb_version }} multiverse'
         state: present
         filename: mongodb-org
 
     - name: Import MongoDB public GPG key
       when: ansible_distribution == "Ubuntu"
-      ansible.builtin.apt_key:
-        url: 'https://www.mongodb.org/static/pgp/server-6.0.asc'
-        state: present
+      ansible.builtin.command:
+        cmd: "curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-org-archive-keyring.gpg"
+      changed_when: false
 
     - name: Update APT cache
       when: ansible_distribution == "Ubuntu"
