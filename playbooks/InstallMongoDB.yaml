@@ -1,49 +1,39 @@
 ---
-- name: Install and Configure MongoDB
+- name: Install and Configure MongoDB on Ubuntu
   hosts: all
   become: yes
   vars:
     mongodb_version: "6.0"  # Adjust version as needed
 
   tasks:
-    - name: Determine OS distribution
-      ansible.builtin.setup:
-        filter: ansible_distribution
-
     - name: Add MongoDB repository for Ubuntu
       when: ansible_distribution == "Ubuntu"
       apt_repository:
-        repo: 'deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu {{ ansible_lsb.codename }} /mongodb-org/ {{ mongodb_version }}'
+        repo: 'deb [ arch=amd64 signed-by=/usr/share/keyrings/mongodb-archive-keyring.gpg ] https://repo.mongodb.org/apt/ubuntu {{ ansible_lsb.codename }} mongodb-org {{ mongodb_version }}'
         state: present
         filename: mongodb
 
-    - name: Add MongoDB repository for Red Hat/CentOS
-      when: ansible_distribution == "RedHat"
-      yum_repository:
-        name: mongodb-org-{{ mongodb_version }}
-        description: MongoDB {{ mongodb_version }} Repository
-        baseurl: https://repo.mongodb.org/yum/redhat/$releasever/$basearch/
-        gpgcheck: 1
-        gpgkey: https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc
-        enabled: 1
+    - name: Import MongoDB public GPG key
+      when: ansible_distribution == "Ubuntu"
+      ansible.builtin.apt_key:
+        url: 'https://www.mongodb.org/static/pgp/server-6.0.asc'
+        state: present
+        keyring: /usr/share/keyrings/mongodb-archive-keyring.gpg
+
+    - name: Update APT cache
+      when: ansible_distribution == "Ubuntu"
+      apt:
+        update_cache: yes
 
     - name: Install MongoDB package
+      when: ansible_distribution == "Ubuntu"
       apt:
         name: mongodb-org
         state: present
-      when: ansible_distribution == "Ubuntu"
-
-    - name: Install MongoDB package
-      yum:
-        name: mongodb-org
-        state: present
-      when: ansible_distribution == "RedHat"
 
     - name: Start and enable MongoDB service
+      when: ansible_distribution == "Ubuntu"
       service:
         name: mongod
         state: started
         enabled: yes
-
-   
-        
