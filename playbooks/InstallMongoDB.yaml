@@ -45,19 +45,5 @@
         state: started
         enabled: yes
 
-    - name: Create a MongoDB database
-      community.mongodb.mongodb:
-        login_user: admin
-        login_password: adminpass
-        name: mydatabase
-        state: present
-      delegate_to: localhost
-
-    - name: Create a MongoDB collection
-      community.mongodb.mongodb:
-        login_user: admin
-        login_password: adminpass
-        database: mydatabase
-        collection: mycollection
-        state: present
-      delegate_to: localhost
+   
+        
