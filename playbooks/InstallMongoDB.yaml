@@ -3,30 +3,33 @@
   hosts: all
   become: yes
 
-  
   tasks:
+    - name: Determine OS distribution
+      ansible.builtin.setup:
+        filter: ansible_distribution
+
     - name: Install MongoDB on Ubuntu
-      when: ansible_os_family == "Ubuntu"
+      when: ansible_distribution == "Ubuntu"
       apt:
         name: mongodb
         state: present
         update_cache: yes
 
     - name: Add MongoDB repository for Ubuntu
-      when: ansible_os_family == "Ubuntu"
+      when: ansible_distribution == "Ubuntu"
       apt_repository:
         repo: 'deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu {{ ansible_lsb.codename }} mongodb-org 6.0'
         state: present
         filename: mongodb
 
     - name: Install MongoDB on Red Hat/CentOS
-      when: ansible_os_family == "RedHat"
+      when: ansible_distribution == "RedHat"
       yum:
         name: mongodb-org
         state: present
 
     - name: Add MongoDB repository for Red Hat/CentOS
-      when: ansible_os_family == "RedHat"
+      when: ansible_distribution == "RedHat"
       yum_repository:
         name: mongodb-org-6.0
         description: MongoDB 6.0 Repository
