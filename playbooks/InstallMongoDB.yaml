@@ -6,12 +6,7 @@
     mongodb_version: "6.0"  # Adjust version as needed
 
   tasks:
-    - name: Add MongoDB repository for Ubuntu
-      when: ansible_distribution == "Ubuntu"
-      apt_repository:
-        repo: 'deb [ arch=amd64 signed-by=/usr/share/keyrings/mongodb-archive-keyring.gpg ] https://repo.mongodb.org/apt/ubuntu {{ ansible_lsb.codename }} mongodb-org {{ mongodb_version }}'
-        state: present
-        filename: mongodb
+   
 
     - name: Import MongoDB public GPG key
       when: ansible_distribution == "Ubuntu"
@@ -19,7 +14,12 @@
         url: 'https://www.mongodb.org/static/pgp/server-6.0.asc'
         state: present
         keyring: /usr/share/keyrings/mongodb-archive-keyring.gpg
-
+    - name: Add MongoDB repository for Ubuntu
+      when: ansible_distribution == "Ubuntu"
+      apt_repository:
+        repo: 'deb [ arch=amd64 signed-by=/usr/share/keyrings/mongodb-archive-keyring.gpg ] https://repo.mongodb.org/apt/ubuntu {{ ansible_lsb.codename }} mongodb-org {{ mongodb_version }}'
+        state: present
+        filename: mongodb
     - name: Update APT cache
       when: ansible_distribution == "Ubuntu"
       apt:
