@@ -23,9 +23,9 @@
       ansible.builtin.apt:
        update_cache: yes
        
-   - name: Install dependencies
-     when: ansible_distribution == "RedHat"
-      yum:
+    - name: Install dependencies
+      when: ansible_distribution == "RedHat"
+       yum:
         name: 
           - libselinux-python
           - gnupg
