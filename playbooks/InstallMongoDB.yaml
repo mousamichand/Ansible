@@ -8,8 +8,8 @@
   tasks:
     - name: Add MongoDB GPG key
       ansible.builtin.apt_key:
-      url: https://pgp.mongodb.com/server-6.0.asc
-      state: present
+       url: https://pgp.mongodb.com/server-6.0.asc
+       state: present
 
     - name: Add MongoDB repository
       ansible.builtin.apt_repository:
