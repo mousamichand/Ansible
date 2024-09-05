@@ -22,6 +22,69 @@
       when: ansible_distribution == "Ubuntu"
       ansible.builtin.apt:
        update_cache: yes
+       
+   - name: Install dependencies
+     when: ansible_distribution == "RedHat"
+      yum:
+        name: 
+          - libselinux-python
+          - gnupg
+        state: present
+
+    - name: Add MongoDB repository
+      when: ansible_distribution == "RedHat"
+      yum_repository:
+        name: "mongodb-org-{{ mongodb_version }}"
+        description: "MongoDB Repository"
+        baseurl: "{{ mongodb_repo_url }}"
+        gpgcheck: yes
+        enabled: yes
+        gpgkey: https://www.mongodb.org/static/pgp/server-6.0.asc
+
+    - name: Ensure cache is refreshed after adding MongoDB repository
+      when: ansible_distribution == "RedHat"
+      yum:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Install MongoDB
+      when: ansible_distribution == "RedHat"
+      yum:
+        name: mongodb-org
+        state: present
+
+    - name: Enable and start MongoDB
+      when: ansible_distribution == "RedHat"
+      systemd:
+        name: mongod
+        enabled: yes
+        state: started
+
+    - name: Ensure MongoDB is running
+      when: ansible_distribution == "RedHat"
+      shell: "systemctl status mongod"
+      register: mongod_status
+      ignore_errors: yes
+
+    - name: Print MongoDB status
+      debug:
+        msg: "{{ mongod_status.stdout_lines }}"
+
+    - name: Configure firewalld to allow MongoDB traffic
+      when: ansible_distribution == "RedHat"
+      firewalld:
+        service: mongodb
+        permanent: yes
+        immediate: yes
+        state: enabled
+      notify: reload firewalld
+
+  handlers:
+    - name: reload firewalld
+      service:
+        name: firewalld
+        state: reloaded    
   
 
     - name: Install MongoDB package
