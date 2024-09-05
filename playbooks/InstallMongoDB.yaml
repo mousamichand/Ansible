@@ -32,8 +32,8 @@
         state: present
 
    - name: Add MongoDB repository
-      when: ansible_distribution == "RedHat"
-      yum_repository:
+     when: ansible_distribution == "RedHat"
+     yum_repository:
         name: "mongodb-org-{{ mongodb_version }}"
         description: "MongoDB Repository"
         baseurl: "{{ mongodb_repo_url }}"
