@@ -1,13 +1,64 @@
-- name: Add MongoDB GPG key
-  ansible.builtin.apt_key:
-    url: https://pgp.mongodb.com/server-6.0.asc
-    state: present
+---
+- hosts: all
+  become: yes
+  vars:
+    mongodb_version: "6.0"
+    mongodb_repo_url: "https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/{{ mongodb_version }}/x86_64/"
 
-- name: Add MongoDB repository
-  ansible.builtin.apt_repository:
-    repo: "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/6.0 multiverse"
-    state: present
+  tasks:
 
-- name: Update apt cache
-  ansible.builtin.apt:
-    update_cache: yes
+    - name: Install dependencies
+      yum:
+        name: 
+          - libselinux-python
+          - gnupg
+        state: present
+
+    - name: Add MongoDB repository
+      yum_repository:
+        name: "mongodb-org-{{ mongodb_version }}"
+        description: "MongoDB Repository"
+        baseurl: "{{ mongodb_repo_url }}"
+        gpgcheck: yes
+        enabled: yes
+        gpgkey: https://www.mongodb.org/static/pgp/server-6.0.asc
+
+    - name: Ensure cache is refreshed after adding MongoDB repository
+      yum:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Install MongoDB
+      yum:
+        name: mongodb-org
+        state: present
+
+    - name: Enable and start MongoDB
+      systemd:
+        name: mongod
+        enabled: yes
+        state: started
+
+    - name: Ensure MongoDB is running
+      shell: "systemctl status mongod"
+      register: mongod_status
+      ignore_errors: yes
+
+    - name: Print MongoDB status
+      debug:
+        msg: "{{ mongod_status.stdout_lines }}"
+
+    - name: Configure firewalld to allow MongoDB traffic
+      firewalld:
+        service: mongodb
+        permanent: yes
+        immediate: yes
+        state: enabled
+      notify: reload firewalld
+
+  handlers:
+    - name: reload firewalld
+      service:
+        name: firewalld
+        state: reloaded
