@@ -7,16 +7,19 @@
 
   tasks:
     - name: Add MongoDB GPG key
+      when: ansible_distribution == "Ubuntu"
       ansible.builtin.apt_key:
        url: https://pgp.mongodb.com/server-6.0.asc
        state: present
 
     - name: Add MongoDB repository
+      when: ansible_distribution == "Ubuntu"
       ansible.builtin.apt_repository:
        repo: "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/6.0 multiverse"
        state: present
 
     - name: Update apt cache
+      when: ansible_distribution == "Ubuntu"
       ansible.builtin.apt:
        update_cache: yes
   
