@@ -25,11 +25,11 @@
        
     - name: Install dependencies
       when: ansible_distribution == "RedHat"
-       yum:
-        name: 
+        yum:
+         name: 
           - libselinux-python
           - gnupg
-        state: present
+         state: present
 
     - name: Add MongoDB repository
       when: ansible_distribution == "RedHat"
