@@ -64,6 +64,7 @@
       ignore_errors: yes
 
     - name: Print MongoDB status
+      when: ansible_distribution == "RedHat"
       debug:
         msg: "{{ mongod_status.stdout_lines }}"
 
