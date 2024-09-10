@@ -118,8 +118,8 @@
         gpgkey: https://www.mongodb.org/static/pgp/server-6.0.asc
         enabled: 1
       when: ansible_os_family == "RedHat"   
-    - name: Install MongoDB shell on RHEL/CentOS
-      yum:
+    - name: Install MongoDB shell on Ubuntu
+      apt:
         name:
           - mongodb-org-shell
         state: present
