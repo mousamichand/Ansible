@@ -98,7 +98,11 @@
           - mongodb-org-shell
         state: present
       when: ansible_os_family == "Debian"
-    
+    - name: Install pip3
+      apt:
+        name: python3-pip
+        state: present
+        update_cache: yes
     - name: Ensure MongoDB Python driver is installed
       pip:
         name: pymongo
