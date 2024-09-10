@@ -92,6 +92,13 @@
         name: mongod
         state: started
         enabled: yes
+  - name: Install MongoDB shell on Ubuntu and Debian
+      apt:
+        name:
+          - mongodb-org-shell
+        state: present
+    when: ansible_os_family == "Debian"
+    
     - name: Ensure MongoDB Python driver is installed
       pip:
         name: pymongo
