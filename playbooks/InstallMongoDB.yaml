@@ -83,7 +83,9 @@
     - name: Install MongoDB package on Ubuntu
       when: ansible_distribution == "Ubuntu"
       apt:
-        name: mongodb-org
+        name:
+         - mongodb-org
+         - mongodb-mongosh
         state: present
 
     - name: Start and enable MongoDB service on Ubuntu
