@@ -9,7 +9,7 @@
 
   tasks:
     - name: Add MongoDB GPG key
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_facts['os_family'] == 'RedHat'
       ansible.builtin.apt_key:
        url: https://pgp.mongodb.com/server-6.0.asc
        state: present
@@ -28,7 +28,7 @@
     
 
     - name: Add MongoDB repository
-      when: ansible_distribution == "RedHat"
+      when: ansible_facts['os_family'] == "RedHat"
       yum_repository:
         name: "mongodb-org-{{ mongodb_version }}"
         description: "MongoDB Repository"
@@ -38,38 +38,38 @@
         gpgkey: https://www.mongodb.org/static/pgp/server-6.0.asc
 
     - name: Ensure cache is refreshed after adding MongoDB repository
-      when: ansible_distribution == "RedHat"
+      when: ansible_facts['os_family'] == "RedHat"
       yum:
         name: "*"
         state: latest
         update_cache: yes
 
     - name: Install MongoDB
-      when: ansible_distribution == "RedHat"
+      when: ansible_facts['os_family'] == "RedHat"
       yum:
         name: mongodb-org
         state: present
 
     - name: Enable and start MongoDB
-      when: ansible_distribution == "RedHat"
+      when: ansible_facts['os_family'] == "RedHat"
       systemd:
         name: mongod
         enabled: yes
         state: started
 
     - name: Ensure MongoDB is running
-      when: ansible_distribution == "RedHat"
+      when: ansible_facts['os_family'] == "RedHat"
       shell: "systemctl status mongod"
       register: mongod_status
       ignore_errors: yes
 
     - name: Print MongoDB status
-      when: ansible_distribution == "RedHat"
+      when: ansible_facts['os_family'] == "RedHat"
       debug:
         msg: "{{ mongod_status.stdout_lines }}"
 
     - name: Configure firewalld to allow MongoDB traffic
-      when: ansible_distribution == "RedHat"
+      when: ansible_facts['os_family'] == "RedHat"
       firewalld:
         service: mongodb
         permanent: yes
