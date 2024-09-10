@@ -92,7 +92,7 @@
         name: mongod
         state: started
         enabled: yes
-handlers:
+  handlers:
     - name: reload firewalld
       service:
         name: firewalld
