@@ -92,6 +92,17 @@
         name: mongod
         state: started
         enabled: yes
+    - name: Ensure MongoDB Python driver is installed
+      pip:
+        name: pymongo
+
+    - name: Define roles
+     community.mongodb.mongodb_user:
+      database: burgers
+      name: jim
+      password: 12345
+      roles: readWrite,dbAdmin,userAdmin
+     state: present
   handlers:
     - name: reload firewalld
       service:
