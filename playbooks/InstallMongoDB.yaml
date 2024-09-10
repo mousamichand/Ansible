@@ -80,32 +80,21 @@
   
   
 
-    - name: Install MongoDB package
+    - name: Install MongoDB package on Ubuntu
       when: ansible_distribution == "Ubuntu"
       apt:
         name: mongodb-org
         state: present
 
-    - name: Start and enable MongoDB service
+    - name: Start and enable MongoDB service on Ubuntu
       when: ansible_distribution == "Ubuntu"
       service:
         name: mongod
         state: started
         enabled: yes
-    - name: Install MongoDB shell (mongo) and other tools
-      apt:
-        name: mongodb-org-shell
-        state: present
+    
 
-    - name: Verify MongoDB shell installation
-      command: mongo --version
-      register: mongo_version
-      ignore_errors: yes
-
-    - name: Print MongoDB shell version
-      debug:
-        var: mongo_version.stdout
-      when: mongo_version.rc == 0 
+   
     
     - name: Install pip3
       apt:
