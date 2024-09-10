@@ -112,15 +112,7 @@
        password: 12345
        roles: readWrite,dbAdmin,userAdmin
        state: present
-    - name: Add MongoDB repository for RHEL/CentOS
-      yum_repository:
-        name: mongodb-org
-        description: MongoDB Repository
-        baseurl: https://repo.mongodb.org/yum/redhat/8/x86_64/
-        gpgcheck: 1
-        gpgkey: https://www.mongodb.org/static/pgp/server-6.0.asc
-        enabled: 1
-      when: ansible_os_family == "RedHat"   
+    
    
      
 
