@@ -102,7 +102,7 @@
       name: jim
       password: 12345
       roles: readWrite,dbAdmin,userAdmin
-     state: present
+      state: present
      
   handlers:
     - name: reload firewalld
