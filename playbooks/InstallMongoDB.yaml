@@ -11,7 +11,7 @@
     - name: Add MongoDB GPG key
       when: ansible_distribution == "Ubuntu"
       ansible.builtin.apt_key:
-       url: https://www.mongodb.org/static/pgp/server-6.0.asc
+       url: https://pgp.mongodb.com/server-6.0.asc
        state: present
 
     - name: Add MongoDB repository
