@@ -97,12 +97,13 @@
         name: pymongo
 
     - name: Define roles
-     community.mongodb.mongodb_user:
+      community.mongodb.mongodb_user:
       database: burgers
       name: jim
       password: 12345
       roles: readWrite,dbAdmin,userAdmin
      state: present
+     
   handlers:
     - name: reload firewalld
       service:
