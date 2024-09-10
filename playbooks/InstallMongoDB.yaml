@@ -47,7 +47,9 @@
     - name: Install MongoDB
       when: ansible_distribution == 'RedHat'
       yum:
-        name: mongodb-org
+        name: 
+         - mongodb-org
+         - mongodb-org-shell
         state: present
 
     - name: Enable and start MongoDB
