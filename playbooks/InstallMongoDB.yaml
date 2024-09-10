@@ -110,7 +110,21 @@
        password: 12345
        roles: readWrite,dbAdmin,userAdmin
        state: present
-     
+    - name: Install MongoDB shell on RHEL/CentOS
+      yum:
+        name:
+          - mongodb-org-shell
+        state: present
+     when: ansible_os_family == "RedHat"
+
+    - name: Verify MongoDB shell installation
+      command: mongo --version
+      register: mongo_version
+      changed_when: false
+
+    - name: Display MongoDB shell version
+      debug:
+        msg: "MongoDB shell version: {{ mongo_version.stdout }}"    
   handlers:
     - name: reload firewalld
       service:
