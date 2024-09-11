@@ -3,9 +3,8 @@
   hosts: all
   become: yes
   vars:
-    mongodb_version: "6.0"  # Adjust version as needed
+    mongodb_version: "{{ hostvars[inventory_hostname]['morpheus']['customOptions']['PostgresVer'] }}"  # Adjust version as needed
     mongodb_repo_url: "https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/{{ mongodb_version }}/x86_64/"
-
 
   tasks:
     - name: Add MongoDB GPG key
@@ -24,9 +23,7 @@
       when: ansible_distribution == "Ubuntu"
       ansible.builtin.apt:
        update_cache: yes
-       
-    
-
+   
     - name: Add MongoDB repository
       when: ansible_distribution == 'RedHat'
       yum_repository:
@@ -79,9 +76,6 @@
         state: enabled
       notify: reload firewalld
 
-  
-  
-
     - name: Install MongoDB package on Ubuntu
       when: ansible_distribution == "Ubuntu"
       apt:
@@ -96,9 +90,6 @@
         name: mongod
         state: started
         enabled: yes
-    
-
-   
     
     - name: Install pip3
       when: ansible_distribution == "Ubuntu"
@@ -118,11 +109,6 @@
        roles: readWrite,dbAdmin,userAdmin
        state: present
     
-   
-     
-
-    
- 
   handlers:
     - name: reload firewalld
       service:
