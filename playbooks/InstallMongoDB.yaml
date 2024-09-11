@@ -35,7 +35,7 @@
         baseurl: "{{ mongodb_repo_url }}"
         gpgcheck: yes
         enabled: yes
-        gpgkey: https://www.mongodb.org/static/pgp/server-6.0.asc
+        gpgkey: https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc
 
     - name: Ensure cache is refreshed after adding MongoDB repository
       when: ansible_distribution == 'RedHat'
