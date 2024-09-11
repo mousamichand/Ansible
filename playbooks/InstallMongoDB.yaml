@@ -11,13 +11,13 @@
     - name: Add MongoDB GPG key
       when: ansible_distribution == "Ubuntu"
       ansible.builtin.apt_key:
-       url: https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc
+       url: https://www.mongodb.org/static/pgp/server-5.0.asc
        state: present
 
     - name: Add MongoDB repository
       when: ansible_distribution == "Ubuntu"
       ansible.builtin.apt_repository:
-       repo: "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_version }} multiverse"
+       repo: "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/5.0 multiverse"
        state: present
 
     - name: Update apt cache
