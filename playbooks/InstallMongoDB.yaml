@@ -112,8 +112,8 @@
 
     - name: Define roles
       community.mongodb.mongodb_user:
-       database: burgers
-       name: jim
+       database: testdb
+       name: testuser
        password: 12345
        roles: readWrite,dbAdmin,userAdmin
        state: present
