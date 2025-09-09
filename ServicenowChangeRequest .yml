@@ -3,9 +3,9 @@
   hosts: localhost
   gather_facts: no
   vars:
-    servicenow_instance: "yourinstance.service-now.com"
-    servicenow_user: "your_username"
-    servicenow_password: "your_password"
+    servicenow_instance: "{{ lookup('cypher','secret=secret/snowinstance')"
+    servicenow_user: "admin"
+    servicenow_password: "{{ lookup('cypher','secret=secret/snowpass') | password_hash('sha512') }}"
     change_request_payload:
       short_description: "Update Apache server"
       description: "Updating Apache server to latest stable version"
