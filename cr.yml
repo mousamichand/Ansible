@@ -1,6 +1,6 @@
 ---
 - name: Create ServiceNow Change Request via REST API
-  hosts: localhost
+  hosts: all
   gather_facts: no
   vars:
     servicenow_instance: "{{ lookup('cypher','secret=secret/snowinstance') }}"
