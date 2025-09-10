@@ -36,5 +36,22 @@
     - name: Extract CR sys_id
       set_fact:
         cr_sys_id: "{{ create_response.json.result.sys_id }}"
+       - name: Wait until the Change Request is approved
+      uri:
+        url: "https://{{ servicenow_instance }}.service-now.com/api/now/table/change_request/{{ cr_sys_id }}"
+        method: GET
+        user: "{{ servicenow_user }}"
+        password: "{{ servicenow_password }}"
+        force_basic_auth: yes
+        headers:
+          Accept: "application/json"
+      register: cr_status
+      until: cr_status.json.result.state == "3"   # "3" = Approved in ServiceNow by default
+      retries: "{{ max_retries }}"
+      delay: "{{ polling_interval }}"
+
+    - name: Display CR approved status
+      debug:
+        msg: "Change Request {{ cr_sys_id }} is approved!"     
 
    
