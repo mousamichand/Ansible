@@ -4,8 +4,8 @@
   gather_facts: no
   vars:
     servicenow_instance: "{{ lookup('cypher','secret=secret/snowinstance')}}"
-    servicenow_user: "er.mousamichand@gmail.com"
-    servicenow_password: "{{ lookup('cypher','secret=secret/snowpass') | password_hash('sha512') }}"
+    servicenow_user: "admin"
+    servicenow_password: "{{ lookup('cypher','secret=secret/snowpass') }}"
     change_request_payload:
       short_description: "Update Apache server"
       description: "Updating Apache server to latest stable version"
