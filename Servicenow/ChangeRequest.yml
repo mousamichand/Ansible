@@ -1,0 +1,56 @@
+---
+- name: Create Change Request and wait for approval
+  hosts: localhost
+  gather_facts: no
+  vars:
+    servicenow_instance: "dev296530"            # Replace with your instance
+    servicenow_user: "er.mousamichand@gmail.com" # ServiceNow user
+    servicenow_password: "YourPlainPassword"     # Use Vault in production
+    change_request_payload:
+      short_description: "Update Apache Server"
+      description: "Updating Apache server to latest stable version"
+      category: "Software"
+      priority: "3"
+      risk: "Low"
+      type: "Normal"
+    polling_interval: 60  # seconds
+    max_retries: 30       # total wait time = polling_interval * max_retries
+
+  tasks:
+
+    - name: Create a Change Request in ServiceNow
+      uri:
+        url: "https://{{ servicenow_instance }}.service-now.com/api/now/table/change_request"
+        method: POST
+        user: "{{ servicenow_user }}"
+        password: "{{ servicenow_password }}"
+        force_basic_auth: yes
+        headers:
+          Content-Type: "application/json"
+          Accept: "application/json"
+        body_format: json
+        body: "{{ change_request_payload }}"
+        status_code: 201
+      register: create_response
+
+    - name: Extract CR sys_id
+      set_fact:
+        cr_sys_id: "{{ create_response.json.result.sys_id }}"
+
+    - name: Wait until the Change Request is approved
+      uri:
+        url: "https://{{ servicenow_instance }}.service-now.com/api/now/table/change_request/{{ cr_sys_id }}"
+        method: GET
+        user: "{{ servicenow_user }}"
+        password: "{{ servicenow_password }}"
+        force_basic_auth: yes
+        headers:
+          Accept: "application/json"
+      register: cr_status
+      until: cr_status.json.result.state == "3"   # "3" = Approved in ServiceNow by default
+      retries: "{{ max_retries }}"
+      delay: "{{ polling_interval }}"
+
+    - name: Display CR approved status
+      debug:
+        msg: "Change Request {{ cr_sys_id }} is approved!"
