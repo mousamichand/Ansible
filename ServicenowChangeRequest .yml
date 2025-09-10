@@ -3,7 +3,7 @@
   hosts: all
   gather_facts: no
   vars:
-    servicenow_instance: "{{ lookup('cypher','secret=secret/snowinstance')"
+    servicenow_instance: "{{ lookup('cypher','secret=secret/snowinstance')}}"
     servicenow_user: "admin"
     servicenow_password: "{{ lookup('cypher','secret=secret/snowpass') | password_hash('sha512') }}"
     change_request_payload:
