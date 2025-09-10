@@ -1,6 +1,6 @@
 ---
 - name: Raise Change Request and wait for approval
-  hosts: localhost
+  hosts: all
   gather_facts: no
   vars:
     servicenow_instance: "{{ lookup('cypher','secret=secret/snowinstance')"
