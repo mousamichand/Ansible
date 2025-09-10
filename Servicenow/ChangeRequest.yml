@@ -36,7 +36,7 @@
     - name: Extract CR sys_id
       set_fact:
         cr_sys_id: "{{ create_response.json.result.sys_id }}"
-       - name: Wait until the Change Request is approved
+    -  name: Wait until the Change Request is approved
       uri:
         url: "https://{{ servicenow_instance }}.service-now.com/api/now/table/change_request/{{ cr_sys_id }}"
         method: GET
