@@ -12,7 +12,7 @@
       category: "{{ morpheus['customOptions']['CRCategoryList'] }}"
       priority: "{{ morpheus['customOptions']['CrPriority'] }}"
       risk: "{{ morpheus['customOptions']['CrRisk'] }}"
-      type: "{{ morpheus['customOptions']['CrType'}}"
+      type: "{{ morpheus['customOptions']['CrType']}}"
     polling_interval: 60  # seconds
     max_retries: 30       # total wait time = polling_interval * max_retries
 
