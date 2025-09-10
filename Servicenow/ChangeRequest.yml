@@ -7,7 +7,7 @@
     servicenow_user: "admin"
     servicenow_password: "{{ lookup('cypher','secret=secret/snowpass') }}"
     change_request_payload:
-      short_description: "Update Apache Server"
+      short_description: "{{ morpheus['customOptions']['CrShort']}}"
       description: "Updating Apache server to latest stable version"
       category: "{{ morpheus['customOptions']['CRCategoryList'] }}"
       priority: "{{ morpheus['customOptions']['CrPriority'] }}"
