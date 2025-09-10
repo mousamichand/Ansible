@@ -9,7 +9,7 @@
     change_request_payload:
       short_description: "Update Apache Server"
       description: "Updating Apache server to latest stable version"
-      category: "{{ morpheus['customOptions']['CRCategoryList] }}"
+      category: "{{ morpheus['customOptions']['CRCategoryList'] }}"
       priority: "{{ morpheus['customOptions']['CrPriority'] }}"
       risk: "{{ morpheus['customOptions']['CrRisk'] }}"
       type: "{{ morpheus['customOptions']['CrType'}}"
