@@ -1,11 +1,11 @@
 ---
 - name: Create Change Request and wait for approval
-  hosts: localhost
+  hosts: all
   gather_facts: no
   vars:
-    servicenow_instance: "dev296530"            # Replace with your instance
-    servicenow_user: "er.mousamichand@gmail.com" # ServiceNow user
-    servicenow_password: "YourPlainPassword"     # Use Vault in production
+    servicenow_instance: "{{ lookup('cypher','secret=secret/snowinstance')}}"
+    servicenow_user: "admin"
+    servicenow_password: "{{ lookup('cypher','secret=secret/snowpass') }}"
     change_request_payload:
       short_description: "Update Apache Server"
       description: "Updating Apache server to latest stable version"
