@@ -5,7 +5,7 @@
   vars:
     servicenow_instance: "{{ lookup('cypher','secret=secret/snowinstance') }}"
     servicenow_user: "admin"
-    servicenow_password: "VfHeoXw9$3%T"
+    servicenow_password: "{{ lookup('cypher','secret=secret/snowpass') }}"
     change_request_payload:
       short_description: "Update Apache Server"
       description: "Updating Apache server to latest stable version"
