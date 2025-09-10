@@ -29,6 +29,6 @@
         status_code: 201
       register: create_response
 
-   - name: Display the created Change Request sys_id
+    - name: Display the created Change Request sys_id
       debug:
         msg: "Change Request created with sys_id: {{ result.json.result.sys_id }}"
