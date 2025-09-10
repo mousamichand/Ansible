@@ -29,7 +29,7 @@
         body: "{{ change_request_payload }}"
         status_code: 201
       register: create_response
-      ignore_errors: yes
+      
 
     - name: Display full API response
       debug:
