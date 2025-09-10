@@ -29,34 +29,6 @@
         status_code: 201
       register: create_response
 
-    - name: Extract sys_id of created Change Request
-      set_fact:
-        change_request_sys_id: "{{ create_response.json.result.sys_id }}"
-
-    - name: Wait for Change Request approval
-      vars:
-        approval_status: ""
-      block:
-        - name: Check approval status
-          uri:
-            url: "https://{{ servicenow_instance }}/api/now/table/change_request?sys_id={{ change_request_sys_id }}"
-            method: GET
-            user: "{{ servicenow_user }}"
-            password: "{{ servicenow_password }}"
-            force_basic_auth: yes
-            headers:
-              Accept: "application/json"
-          register: query_response
-          until: query_response.json.result[0].approval == "approved"
-          retries: 20          # number of polling attempts
-          delay: 30            # seconds between polls
-          ignore_errors: yes
-
-        - name: Fail if Change Request is not approved after retries
-          fail:
-            msg: "Change Request was not approved within the expected time."
-          when: query_response.json.result[0].approval != "approved"
-
-    - name: Show approved message
+   - name: Display the created Change Request sys_id
       debug:
-        msg: "Change Request {{ change_request_sys_id }} is approved!"
+        msg: "Change Request created with sys_id: {{ result.json.result.sys_id }}"
