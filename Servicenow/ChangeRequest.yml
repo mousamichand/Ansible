@@ -9,10 +9,10 @@
     change_request_payload:
       short_description: "Update Apache Server"
       description: "Updating Apache server to latest stable version"
-      category: "Software"
-      priority: "3"
-      risk: "Low"
-      type: "Normal"
+      category: "{{ morpheus['customOptions']['CrCategory'] }}"
+      priority: "{{ morpheus['customOptions']['CrPriority'] }}""
+      risk: "{{ morpheus['customOptions']['CrRisk'] }}"
+      type: "{{ morpheus['customOptions']['CrType'}}"
     polling_interval: 60  # seconds
     max_retries: 30       # total wait time = polling_interval * max_retries
 
