@@ -1,0 +1,25 @@
+---
+- name: Create systemd service file for Tomcat
+  template:
+    src: tomcat.service.j2
+    dest: "/etc/systemd/system/tomcat-{{ app_name }}.service"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart tomcat
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start Tomcat service
+  systemd:
+    name: "tomcat-{{ app_name }}"
+    enabled: yes
+    state: started
+
+# Handler for restarting
+- name: restart tomcat
+  systemd:
+    name: "tomcat-{{ app_name }}"
+    state: restarted
