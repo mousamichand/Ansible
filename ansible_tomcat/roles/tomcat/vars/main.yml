@@ -5,3 +5,25 @@ tomcat_user: tomcat
 tomcat_group: tomcat
 java_package: java-11-openjdk-devel
 java_home: /usr/lib/jvm/java-11-openjdk
+
+
+ Disk configuration
+mysql_disk: /dev/sdb
+mysql_partition: /dev/sdb1
+
+# Volume group and logical volumes
+mysql_vg_name: datavg
+mysql_data_lv: mysqldata
+mysql_archive_lv: mysqlarchive
+mysql_backup_lv: mysqlbackup
+
+# Logical volume sizes
+# The sizes are calculated and set in the config phase task of mysql 'Task Name: config_phase_mysql'
+mysql_data_size: "{{ morpheus['customOptions']['mysqlData'] }}"
+mysql_archive_size: "{{ (morpheus['customOptions']['mysqlData'] | int * 0.5) | int }}" # Should be 50% of data.
+mysql_backup_size: "{{ morpheus['customOptions']['mysqlData'] }}" # Backup should be same as data.
+
+# Directory paths
+mysql_data_dir: /u101/mysql/data
+mysql_archive_dir: /u102/mysql/archive
+mysql_backup_dir: /u103/mysql/backup
