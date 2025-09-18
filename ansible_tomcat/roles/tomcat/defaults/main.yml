@@ -7,7 +7,7 @@ app_name: crm
 # Filesystem (LVM) variables
 vg_name: vg_data
 lv_name: lv_u01
-disk_device: /dev/sdb
+disk_device: /dev/sda
 size: 50G
 filesystem_type: xfs
 
