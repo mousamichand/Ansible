@@ -1,0 +1,20 @@
+# Filesystem & Tomcat variables
+mount_point: /u01
+tomcat_root_dir: "{{ mount_point }}/Tomcat"
+tomcat_version: 10
+app_name: crm
+
+# Filesystem (LVM) variables
+vg_name: vg_data
+lv_name: lv_u01
+disk_device: /dev/sdb
+size: 50G
+filesystem_type: xfs
+
+# Tomcat ownership
+tomcat_user: tomcat
+tomcat_group: tomcat
+
+# Java variables
+java_package: java-11-openjdk
+java_home: /usr/lib/jvm/jre
