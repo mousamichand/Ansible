@@ -1,22 +1,22 @@
 [Unit]
-Description=Apache Tomcat Web Application Container
+Description=Apache Tomcat Service for {{ app_name }}
 After=network.target
 
 [Service]
 Type=forking
-
 User={{ tomcat_user }}
 Group={{ tomcat_group }}
 
 Environment="JAVA_HOME={{ java_home }}"
-Environment="CATALINA_PID={{ tomcat_install_dir }}/temp/tomcat.pid"
-Environment="CATALINA_HOME={{ tomcat_install_dir }}"
-Environment="CATALINA_BASE={{ tomcat_install_dir }}"
-Environment="CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
-Environment="JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
+Environment="CATALINA_HOME={{ tomcat_root_dir }}/Tomcat{{ tomcat_version }}"
+Environment="CATALINA_BASE={{ tomcat_root_dir }}/tomcat-{{ app_name }}"
+Environment="CATALINA_PID={{ tomcat_root_dir }}/tomcat-{{ app_name }}/temp/tomcat.pid"
 
-ExecStart={{ tomcat_install_dir }}/bin/startup.sh
-ExecStop={{ tomcat_install_dir }}/bin/shutdown.sh
+ExecStart={{ tomcat_root_dir }}/Tomcat{{ tomcat_version }}/bin/startup.sh
+ExecStop={{ tomcat_root_dir }}/Tomcat{{ tomcat_version }}/bin/shutdown.sh
+
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
