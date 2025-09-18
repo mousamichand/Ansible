@@ -1,0 +1,34 @@
+---
+- name: Create Volume Group if not exists
+  lvg:
+    vg: "{{ vg_name }}"
+    pvs: "{{ disk_device }}"
+  when: vg_name is defined and disk_device is defined
+
+- name: Create Logical Volume
+  lvol:
+    vg: "{{ vg_name }}"
+    lv: "{{ lv_name }}"
+    size: "{{ size }}"
+    state: present
+  when: vg_name is defined
+
+- name: Create filesystem on logical volume
+  filesystem:
+    fstype: "{{ filesystem_type }}"
+    dev: "/dev/{{ vg_name }}/{{ lv_name }}"
+  when: vg_name is defined
+
+- name: Create mount point directory
+  file:
+    path: "{{ mount_point }}"
+    state: directory
+    mode: "0755"
+
+- name: Mount logical volume
+  mount:
+    path: "{{ mount_point }}"
+    src: "/dev/{{ vg_name }}/{{ lv_name }}"
+    fstype: "{{ filesystem_type }}"
+    state: mounted
+  when: vg_name is defined
