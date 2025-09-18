@@ -1,0 +1,6 @@
+---
+- name: Install Apache Tomcat on RHEL/Rocky Linux
+  hosts: tomcat_servers
+  become: yes
+  roles:
+    - tomcat
