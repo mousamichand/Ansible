@@ -1,0 +1,38 @@
+---
+- name: Create Tomcat base directory
+  file:
+    path: "{{ tomcat_root_dir }}"
+    state: directory
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    mode: "0755"
+
+- name: Create version-specific Tomcat directory
+  file:
+    path: "{{ tomcat_root_dir }}/Tomcat{{ tomcat_version }}"
+    state: directory
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    mode: "0755"
+
+- name: Create application-specific Tomcat directory
+  file:
+    path: "{{ tomcat_root_dir }}/tomcat-{{ app_name }}"
+    state: directory
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    mode: "0755"
+
+- name: Create subdirectories for application
+  file:
+    path: "{{ tomcat_root_dir }}/tomcat-{{ app_name }}/{{ item }}"
+    state: directory
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    mode: "0755"
+  loop:
+    - conf
+    - logs
+    - temp
+    - webapps
+    - work
