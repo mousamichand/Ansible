@@ -1,0 +1,11 @@
+---
+- name: Ensure tomcat group exists
+  group:
+    name: "{{ tomcat_group }}"
+
+- name: Ensure tomcat user exists
+  user:
+    name: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    create_home: no
+    shell: /bin/false
