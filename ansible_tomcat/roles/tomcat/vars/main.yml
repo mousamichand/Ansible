@@ -1,0 +1,7 @@
+---
+tomcat_version: 10.1.24
+tomcat_install_dir: /opt/tomcat
+tomcat_user: tomcat
+tomcat_group: tomcat
+java_package: java-11-openjdk-devel
+java_home: /usr/lib/jvm/java-11-openjdk
