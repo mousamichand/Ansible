@@ -1,0 +1,10 @@
+---
+- name: Check if the disk exists
+  stat:
+    path: "{{ tomcat_disk }}"
+  register: disk_stat
+
+- name: Fail if disk does not exist
+  fail:
+    msg: "{{ tomcat_disk }} not found. Please attach the disk."
+  when: not disk_stat.stat.exists
