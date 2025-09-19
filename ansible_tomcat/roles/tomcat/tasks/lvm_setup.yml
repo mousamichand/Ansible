@@ -26,5 +26,6 @@
 - name: Format tomcat  logical volume with XFS
   filesystem:
     fstype: xfs
-    dev: /dev/{{ vg_name }}/{{lv_size }}  
+    dev: /dev/{{ vg_name }}/{{lv_name }} 
+  become: yes  
   
