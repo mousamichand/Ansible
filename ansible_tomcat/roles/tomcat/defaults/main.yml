@@ -20,7 +20,7 @@ java_package: java-11-openjdk
 java_home: /usr/lib/jvm/jre
 
 tomcat_version: 11
-tomcat_full_version: 11.0.23
+tomcat_full_version: 11.0.11
 
 tomcat_disk: /dev/sdb           # Change according to your environment
 partition_number: 1
