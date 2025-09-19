@@ -22,3 +22,9 @@
   args:
     creates: "/dev/{{ vg_name }}/{{ lv_name }}"   # Prevents rerunning if LV exists
   become: yes
+  
+- name: Format tomcat  logical volume with XFS
+  filesystem:
+    fstype: xfs
+    dev: /dev/{{ vg_name }}/{{lv_size }}  
+  
