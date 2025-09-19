@@ -19,8 +19,8 @@ tomcat_group: tomcat
 java_package: java-11-openjdk
 java_home: /usr/lib/jvm/jre
 
-tomcat_version: 12
-tomcat_full_version: 12.0.0-M1-dev
+tomcat_version: 11
+tomcat_full_version: 11.0.23
 
 tomcat_disk: /dev/sdb           # Change according to your environment
 partition_number: 1
