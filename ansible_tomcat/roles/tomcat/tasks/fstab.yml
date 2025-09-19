@@ -1,0 +1,8 @@
+---
+- name: Ensure mount persists in fstab
+  mount:
+    path: "{{ mount_point }}"
+    src: "/dev/{{ vg_name }}/{{ lv_name }}"
+    fstype: "{{ filesystem_type }}"
+    opts: defaults
+    state: present
