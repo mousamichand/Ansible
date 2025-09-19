@@ -3,6 +3,10 @@
 - import_tasks: user.yml
 #- import_tasks: filesystem.yml
 - import_tasks: java.yml
-- import_tasks: directories.yml
+- import_tasks: disk_setup.yml
+- import_tasks: lvm_setup.yml
+- import_tasks: directory_setup.yml
+- import_tasks: mount_setup.yml
+- import_tasks: fstab.yml
 - import_tasks: tomcatinstall.yml
 - import_tasks: service.yml
