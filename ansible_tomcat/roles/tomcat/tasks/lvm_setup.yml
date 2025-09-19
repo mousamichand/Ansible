@@ -1,6 +1,6 @@
 ---
-- name: Ensure lvm2 package is installed
-  package:
+ - name: Ensure lvm2 package is installed
+   package:
     name: lvm2
     state: present
 
