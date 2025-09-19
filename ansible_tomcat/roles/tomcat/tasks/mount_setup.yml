@@ -1,0 +1,15 @@
+---
+- name: Create mount point directory
+  file:
+    path: "{{ mount_point }}"
+    state: directory
+    owner: "{{ owner_user }}"
+    group: "{{ owner_group }}"
+    mode: "{{ dir_mode }}"
+
+- name: Mount logical volume to mount point
+  mount:
+    path: "{{ mount_point }}"
+    src: "/dev/{{ vg_name }}/{{ lv_name }}"
+    fstype: "{{ filesystem_type }}"
+    state: mounted
