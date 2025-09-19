@@ -1,23 +1,24 @@
 ---
- - name: Ensure lvm2 package is installed
-   package:
+- name: Ensure lvm2 package is installed
+  package:
     name: lvm2
     state: present
+  become: yes
 
- - name: Create Physical Volume
-   lvm_pv:
-    pv: "{{ partition_path }}"
-    state: present
+- name: Create Physical Volume
+  command: pvcreate "{{ partition_path }}"
+  args:
+    creates: "/dev/{{ vg_name }}"   # Prevents running if PV already exists in the VG
+  become: yes
 
- - name: Create Volume Group
-   lvm_vg:
-    vg: "{{ vg_name }}"
-    pvs: "{{ partition_path }}"
-    state: present
+- name: Create Volume Group
+  command: vgcreate "{{ vg_name }}" "{{ partition_path }}"
+  args:
+    creates: "/dev/{{ vg_name }}"   # Prevents rerunning if VG already exists
+  become: yes
 
- - name: Create Logical Volume
-   lvm_lv:
-    vg: "{{ vg_name }}"
-    lv: "{{ lv_name }}"
-    size: "{{ lv_size }}"
-    state: present
+- name: Create Logical Volume
+  command: lvcreate -L "{{ lv_size }}" -n "{{ lv_name }}" "{{ vg_name }}"
+  args:
+    creates: "/dev/{{ vg_name }}/{{ lv_name }}"   # Prevents rerunning if LV exists
+  become: yes
