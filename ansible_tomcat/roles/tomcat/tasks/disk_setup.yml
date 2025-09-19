@@ -8,7 +8,7 @@
   fail:
     msg: "{{ tomcat_disk }} not found. Please attach the disk."
   when: not disk_stat.stat.exists
-  ---
+
 - name: Check if partition already exists
   stat:
     path: "{{ partition_path }}"
