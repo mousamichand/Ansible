@@ -1,0 +1,18 @@
+- name: Download Tomcat
+  get_url:
+    url: "https://downloads.apache.org/tomcat/tomcat-{{ tomcat_version }}/v{{ tomcat_full_version }}/bin/apache-tomcat-{{ tomcat_full_version }}.tar.gz"
+    dest: "/tmp/apache-tomcat-{{ tomcat_full_version }}.tar.gz"
+    mode: '0644'
+
+- name: Extract Tomcat
+  unarchive:
+    src: "/tmp/apache-tomcat-{{ tomcat_full_version }}.tar.gz"
+    dest: "{{ tomcat_root_dir }}"
+    remote_src: yes
+    creates: "{{ tomcat_root_dir }}/Tomcat{{ tomcat_version }}"
+  notify: restart tomcat
+
+- name: Rename Tomcat directory to match standard name
+  command: mv "{{ tomcat_root_dir }}/apache-tomcat-{{ tomcat_full_version }}" "{{ tomcat_root_dir }}/Tomcat{{ tomcat_version }}"
+  args:
+    creates: "{{ tomcat_root_dir }}/Tomcat{{ tomcat_version }}"
