@@ -1,6 +1,6 @@
 - name: Download Tomcat
   get_url:
-    url: "https://downloads.apache.org/tomcat/tomcat-11/v11.0.11/bin//bin/apache-tomcat-{{ tomcat_full_version }}.tar.gz"
+    url: "https://downloads.apache.org/tomcat/tomcat-11/v11.0.11/bin/apache-tomcat-{{ tomcat_full_version }}.tar.gz"
     dest: "/tmp/apache-tomcat-{{ tomcat_full_version }}.tar.gz"
     mode: '0644'
 
