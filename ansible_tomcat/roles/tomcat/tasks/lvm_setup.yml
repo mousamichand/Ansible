@@ -1,39 +1,23 @@
 ---
-- name: Ensure lvm2 is installed
+- name: Ensure lvm2 package is installed
   package:
     name: lvm2
     state: present
 
-- name: Create Volume Group if not exists
-  lvg:
+- name: Create Physical Volume
+  lvm_pv:
+    pv: "{{ partition_path }}"
+    state: present
+
+- name: Create Volume Group
+  lvm_vg:
     vg: "{{ vg_name }}"
-    pvs: "{{ disk_device }}"
-  when: vg_name is defined and disk_device is defined
+    pvs: "{{ partition_path }}"
+    state: present
 
 - name: Create Logical Volume
-  lvol:
+  lvm_lv:
     vg: "{{ vg_name }}"
     lv: "{{ lv_name }}"
-    size: "{{ size }}"
+    size: "{{ lv_size }}"
     state: present
-  when: vg_name is defined
-
-- name: Create filesystem on logical volume
-  filesystem:
-    fstype: "{{ filesystem_type }}"
-    dev: "/dev/{{ vg_name }}/{{ lv_name }}"
-  when: vg_name is defined
-
-- name: Create mount point directory
-  file:
-    path: "{{ mount_point }}"
-    state: directory
-    mode: "0755"
-
-- name: Mount logical volume
-  mount:
-    path: "{{ mount_point }}"
-    src: "/dev/{{ vg_name }}/{{ lv_name }}"
-    fstype: "{{ filesystem_type }}"
-    state: mounted
-  when: vg_name is defined
