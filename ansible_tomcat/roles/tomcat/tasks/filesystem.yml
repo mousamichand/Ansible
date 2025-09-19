@@ -1,4 +1,9 @@
 ---
+- name: Ensure lvm2 is installed
+  package:
+    name: lvm2
+    state: present
+
 - name: Create Volume Group if not exists
   lvg:
     vg: "{{ vg_name }}"
