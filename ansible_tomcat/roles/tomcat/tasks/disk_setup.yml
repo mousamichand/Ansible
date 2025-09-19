@@ -8,3 +8,28 @@
   fail:
     msg: "{{ tomcat_disk }} not found. Please attach the disk."
   when: not disk_stat.stat.exists
+  ---
+- name: Check if partition already exists
+  stat:
+    path: "{{ partition_path }}"
+  register: partition_check
+  ignore_errors: true
+
+- name: Create GPT partition table on {{ tomcat_disk }}
+  parted:
+    device: "{{ tomcat_disk }}"
+    label: gpt
+    number: "{{ partition_number }}"
+    part_start: 0%
+    part_end: 100%
+    part_type: primary
+    state: present
+  when: partition_check is defined and not partition_check.stat.exists
+
+- name: Set partition type to Linux LVM
+  parted:
+    device: "{{ tomcat_disk }}"
+    number: "{{ partition_number }}"
+    flags: [lvm]
+  when: partition_check is defined and not partition_check.stat.exists
+
