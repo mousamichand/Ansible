@@ -18,3 +18,7 @@ tomcat_group: tomcat
 # Java variables
 java_package: java-11-openjdk
 java_home: /usr/lib/jvm/jre
+
+tomcat_version: 10
+tomcat_full_version: 10.1.27
+
