@@ -4,19 +4,19 @@
     name: lvm2
     state: present
 
-- name: Create Physical Volume
-  lvm_pv:
+ - name: Create Physical Volume
+   lvm_pv:
     pv: "{{ partition_path }}"
     state: present
 
-- name: Create Volume Group
-  lvm_vg:
+ - name: Create Volume Group
+   lvm_vg:
     vg: "{{ vg_name }}"
     pvs: "{{ partition_path }}"
     state: present
 
-- name: Create Logical Volume
-  lvm_lv:
+ - name: Create Logical Volume
+   lvm_lv:
     vg: "{{ vg_name }}"
     lv: "{{ lv_name }}"
     size: "{{ lv_size }}"
