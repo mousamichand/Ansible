@@ -1,6 +1,6 @@
 ---
 - name: Install Java
   package:
-    name: "{{ java_package | default('java-11-openjdk') }}"
+    name: "{{ java_package }}"
     
     state: present
