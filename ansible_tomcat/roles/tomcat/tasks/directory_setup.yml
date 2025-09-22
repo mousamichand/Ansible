@@ -1,7 +1,7 @@
 ---
 - name: Create Tomcat base directory
   file:
-    path: "{{ tomcat_root_dir }}"
+    path: "/u01/Tomcat/"
     state: directory
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_group }}"
@@ -9,7 +9,7 @@
 
 - name: Create version-specific Tomcat directory
   file:
-    path: "{{ tomcat_root_dir }}/Tomcat{{ tomcat_version }}"
+    path: /u01/Tomcat/Tomcat{{ tomcat_version }}"
     state: directory
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_group }}"
@@ -17,7 +17,7 @@
 
 - name: Create application-specific Tomcat directory
   file:
-    path: "{{ tomcat_root_dir }}/tomcat-{{ app_name }}"
+    path: "/u01/Tomcat/tomcat-{{ app_name }}"
     state: directory
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_group }}"
@@ -25,7 +25,7 @@
 
 - name: Create subdirectories for application
   file:
-    path: "{{ tomcat_root_dir }}/tomcat-{{ app_name }}/{{ item }}"
+    path: "/u01/Tomcat/tomcat-{{ app_name }}/{{ item }}"
     state: directory
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_group }}"
