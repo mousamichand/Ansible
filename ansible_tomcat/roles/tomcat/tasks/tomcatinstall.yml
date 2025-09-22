@@ -4,15 +4,26 @@
     dest: "/tmp/apache-tomcat-{{ tomcat_full_version }}.tar.gz"
     mode: '0644'
 
-- name: Extract Tomcat
+- name: Ensure Tomcat root directory exists
+  file:
+    path: "/u01/Tomcat"
+    state: directory
+    mode: '0755'
+
+- name: Remove existing Tomcat version folder if present
+  file:
+    path: "/u01/Tomcat/Tomcat{{ tomcat_version }}"
+    state: absent
+  ignore_errors: yes
+
+- name: Extract Tomcat tarball to temp folder
   unarchive:
     src: "/tmp/apache-tomcat-{{ tomcat_full_version }}.tar.gz"
-    dest: "/u01/Tomcat/Tomcat{{ tomcat_version }}"
+    dest: "/u01/Tomcat"
     remote_src: yes
-    #creates: "/u01/Tomcat/Tomcat{{ tomcat_version }}"
-  notify: restart tomcat
 
-- name: Rename Tomcat directory to match standard name
+- name: Rename extracted folder to standard name
   command: mv "/u01/Tomcat/apache-tomcat-{{ tomcat_full_version }}" "/u01/Tomcat/Tomcat{{ tomcat_version }}"
   args:
     creates: "/u01/Tomcat/Tomcat{{ tomcat_version }}"
+  notify: restart tomcat
