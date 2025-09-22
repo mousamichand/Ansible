@@ -7,7 +7,7 @@
 - name: Extract Tomcat
   unarchive:
     src: "/tmp/apache-tomcat-{{ tomcat_full_version }}.tar.gz"
-    dest: "/u01/Tomcat/"
+    dest: "/u01/Tomcat/Tomcat{{ tomcat_version }}"
     remote_src: yes
     #creates: "/u01/Tomcat/Tomcat{{ tomcat_version }}"
   notify: restart tomcat
