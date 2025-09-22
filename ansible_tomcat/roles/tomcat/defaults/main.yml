@@ -27,7 +27,7 @@ tomcat_user: tomcat
 tomcat_group: tomcat
 
 # Java variables
-java_package: java-11-openjdk
+java_package: java-17-openjdk
 java_home: /usr/lib/jvm/jre
 
 
