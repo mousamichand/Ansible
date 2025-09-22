@@ -9,7 +9,7 @@
     src: "/tmp/apache-tomcat-{{ tomcat_full_version }}.tar.gz"
     dest: "{{ tomcat_root_dir }}"
     remote_src: yes
-    creates: "{{ tomcat_root_dir }}/Tomcat{{ tomcat_version }}"
+    creates: "/Tomcat{{ tomcat_version }}"
   notify: restart tomcat
 
 - name: Rename Tomcat directory to match standard name
