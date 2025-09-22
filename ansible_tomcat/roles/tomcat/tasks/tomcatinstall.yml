@@ -27,3 +27,12 @@
   args:
     creates: "/u01/Tomcat/Tomcat{{ tomcat_version }}"
   notify: restart tomcat
+  
+- name: Set ownership and permissions on Tomcat folder
+  file:
+    path: "/u01/Tomcat/Tomcat{{ tomcat_version }}"
+    state: directory
+    recurse: yes
+    owner: tomcat
+    group: tomcat
+    mode: "0755"  
