@@ -9,7 +9,7 @@
 
 - name: Create version-specific Tomcat directory
   file:
-    path: /u01/Tomcat/Tomcat{{ tomcat_version }}"
+    path: "/u01/Tomcat/Tomcat{{ tomcat_version }}"
     state: directory
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_group }}"
