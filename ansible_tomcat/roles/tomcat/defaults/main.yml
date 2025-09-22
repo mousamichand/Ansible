@@ -1,8 +1,19 @@
 # Filesystem & Tomcat variables
 mount_point: /u01
 tomcat_root_dir: "{{ mount_point }}/Tomcat"
-tomcat_version: 12
+tomcat_version: 11
+tomcat_full_version: 11.0.11
 app_name: crm
+
+tomcat_disk: /dev/sdb           # Change according to your environment
+partition_number: 1
+partition_path: "{{ tomcat_disk }}{{ partition_number }}"
+vg_name: vg_tomcat
+lv_name: lv_tomcat
+lv_size: 50G
+mount_point: /u01/Tomcat
+filesystem_type: xfs
+
 
 # Filesystem (LVM) variables
 vg_name: vg_data
@@ -19,17 +30,7 @@ tomcat_group: tomcat
 java_package: java-11-openjdk
 java_home: /usr/lib/jvm/jre
 
-tomcat_version: 11
-tomcat_full_version: 11.0.11
 
-tomcat_disk: /dev/sdb           # Change according to your environment
-partition_number: 1
-partition_path: "{{ tomcat_disk }}{{ partition_number }}"
-vg_name: vg_tomcat
-lv_name: lv_tomcat
-lv_size: 50G
-mount_point: /u01/Tomcat
-filesystem_type: xfs
 
 owner_user: tomcat
 owner_group: tomcat
