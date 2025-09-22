@@ -2,5 +2,5 @@ handlers:
   - name: restart tomcat
     become: true
     ansible.builtin.service:
-      name: tomcat
+      name: tomcat-crm
       state: restarted
