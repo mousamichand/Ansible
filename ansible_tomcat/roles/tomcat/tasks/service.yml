@@ -18,8 +18,5 @@
     enabled: yes
     state: started
 
-# Handler for restarting
-- name: restart tomcat
-  systemd:
-    name: "tomcat-{{ app_name }}"
-    state: restarted
+ handlers:
+    - include: handlers/tomcat_handlers.yml
