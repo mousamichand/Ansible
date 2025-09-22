@@ -18,5 +18,3 @@
     enabled: yes
     state: started
 
- handlers:
-    - include: handlers/tomcat_handlers.yml
