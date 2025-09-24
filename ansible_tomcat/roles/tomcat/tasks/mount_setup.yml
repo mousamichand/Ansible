@@ -5,7 +5,7 @@
     state: directory
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_group }}"
-    mode: "{{ dir_mode }}"
+    mode: "0755"
 
 - name: Mount logical volume to mount point
   mount:
