@@ -10,7 +10,7 @@ partition_number: 1
 partition_path: "{{ tomcat_disk }}{{ partition_number }}"
 vg_name: vg_tomcat
 lv_name: lv_tomcat
-lv_size: 50G
+lv_size: "{{ morpheus['customOptions']['tomcatDatasize'] }}
 mount_point: /u01/Tomcat
 filesystem_type: xfs
 
