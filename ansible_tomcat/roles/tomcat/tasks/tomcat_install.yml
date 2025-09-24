@@ -28,7 +28,7 @@
     remote_src: yes
 
 - name: Rename extracted folder to standard name
-  command: mv "/u01/Tomcat/apache-tomcat-{{ tomcat_version }}" "/u01/Tomcat/Tomcat{{ tomcat_version }}"
+  command: mv "/u01/Tomcat/apache-tomcat-{{ tomcat_full_version}}" "/u01/Tomcat/Tomcat{{ tomcat_version }}"
   args:
     creates: "/u01/Tomcat/Tomcat{{ tomcat_version }}"
   notify: restart tomcat
