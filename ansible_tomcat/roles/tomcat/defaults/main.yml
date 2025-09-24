@@ -25,6 +25,8 @@ filesystem_type: xfs
 # Tomcat ownership
 tomcat_user: tomcat
 tomcat_group: tomcat
+dir_mode: "0755"
+
 
 # Java variables
 java_package: "{{ morpheus['customOptions']['javaVersion'] }}"
@@ -34,4 +36,3 @@ java_home: /usr/lib/jvm/jre
 
 #owner_user: tomcat
 #owner_group: tomcat
-dir_mode: "0755"
