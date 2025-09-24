@@ -32,6 +32,6 @@ java_home: /usr/lib/jvm/jre
 
 
 
-owner_user: tomcat
-owner_group: tomcat
+#owner_user: tomcat
+#owner_group: tomcat
 dir_mode: "0755"
