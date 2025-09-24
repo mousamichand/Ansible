@@ -2,7 +2,7 @@
 mount_point: /u01
 tomcat_root_dir: "{{ mount_point }}/Tomcat"
 tomcat_version: 11
-tomcat_full_version: "{{ morpheus['customOptions']['tomcatVersion'] }}
+tomcat_full_version: "{{ morpheus['customOptions']['tomcatVersion'] }}"
 app_name: crm
 
 tomcat_disk: /dev/sdb           # Change according to your environment
@@ -10,7 +10,7 @@ partition_number: 1
 partition_path: "{{ tomcat_disk }}{{ partition_number }}"
 vg_name: vg_tomcat
 lv_name: lv_tomcat
-lv_size: "{{ morpheus['customOptions']['tomcatDatasize'] }}
+lv_size: "{{ morpheus['customOptions']['tomcatDatasize'] }}"
 mount_point: /u01/Tomcat
 filesystem_type: xfs
 
