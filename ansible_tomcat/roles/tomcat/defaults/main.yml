@@ -25,7 +25,7 @@ filesystem_type: xfs
 # Tomcat ownership
 tomcat_user: tomcat
 tomcat_group: tomcat
-dir_mode: "0755"
+#dir_mode: "0755"
 
 
 # Java variables
