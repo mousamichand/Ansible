@@ -3,6 +3,7 @@
     url: "{{tomcat_download_url}}"
     dest: "/tmp/apache-tomcat-{{ tomcat_version }}.tar.gz"
     mode: '0644'
+    validate_certs: false
 
 - name: Ensure Tomcat root directory exists
   file:
