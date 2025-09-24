@@ -2,7 +2,7 @@
 mount_point: /u01
 tomcat_root_dir: "{{ mount_point }}/Tomcat"
 tomcat_version: 11
-tomcat_full_version: 11.0.11
+tomcat_full_version: "{{ morpheus['customOptions']['tomcatversion'] }}
 app_name: crm
 
 tomcat_disk: /dev/sdb           # Change according to your environment
@@ -27,7 +27,7 @@ tomcat_user: tomcat
 tomcat_group: tomcat
 
 # Java variables
-java_package: java-17-openjdk
+java_package: "{{ morpheus['customOptions']['javaversion'] }}"
 java_home: /usr/lib/jvm/jre
 
 
