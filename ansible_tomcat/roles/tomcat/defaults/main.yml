@@ -42,10 +42,7 @@ tomcat_download_url: >-
       {% else %}
         ""
       {% endif %}
-  when:
-    - ansible_os_family in ["RedHat", "Rocky"]
-    - ansible_distribution_major_version in ["8", "9"]
-    - tomcat_version is defined
+
 
 
 #owner_user: tomcat
