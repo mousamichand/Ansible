@@ -1,7 +1,7 @@
 - name: Download Tomcat
   get_url:
     url: "{{tomcat_download_url}}"
-    dest: "/tmp/apache-tomcat-{{ tomcat_full_version }}.tar.gz"
+    dest: "/tmp/apache-tomcat-{{ tomcat_version }}.tar.gz"
     mode: '0644'
 
 - name: Ensure Tomcat root directory exists
@@ -18,12 +18,12 @@
 
 - name: Extract Tomcat tarball to temp folder
   unarchive:
-    src: "/tmp/apache-tomcat-{{ tomcat_full_version }}.tar.gz"
+    src: "/tmp/apache-tomcat-{{ tomcat_version }}.tar.gz"
     dest: "/u01/Tomcat"
     remote_src: yes
 
 - name: Rename extracted folder to standard name
-  command: mv "/u01/Tomcat/apache-tomcat-{{ tomcat_full_version }}" "/u01/Tomcat/Tomcat{{ tomcat_version }}"
+  command: mv "/u01/Tomcat/apache-tomcat-{{ tomcat_version }}" "/u01/Tomcat/Tomcat{{ tomcat_version }}"
   args:
     creates: "/u01/Tomcat/Tomcat{{ tomcat_version }}"
   notify: restart tomcat
