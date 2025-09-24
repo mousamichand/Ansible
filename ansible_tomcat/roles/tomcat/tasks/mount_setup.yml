@@ -3,8 +3,8 @@
   file:
     path: "{{ mount_point }}"
     state: directory
-    owner: "{{ owner_user }}"
-    group: "{{ owner_group }}"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
     mode: "{{ dir_mode }}"
 
 - name: Mount logical volume to mount point
