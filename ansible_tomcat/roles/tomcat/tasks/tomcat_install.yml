@@ -34,6 +34,6 @@
     path: "/u01/Tomcat/Tomcat{{ tomcat_version }}"
     state: directory
     recurse: yes
-    owner: tomcat
-    group: tomcat
+    owner: {{tomcat_user}}
+    group: {{tomcat_group}}
     mode: "0755"  
