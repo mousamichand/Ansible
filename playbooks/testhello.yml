@@ -1,0 +1,10 @@
+---
+- name: hellow world
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: print hello world
+      debug:
+        msg: "hello, world from Ansible!"
+ 
