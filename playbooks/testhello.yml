@@ -1,7 +1,6 @@
 ---
 - name: hellow world
   hosts: local
-  connection: local
   gather_facts: no
   tasks:
     - name: print hello world
