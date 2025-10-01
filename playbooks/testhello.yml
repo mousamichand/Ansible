@@ -1,6 +1,6 @@
 ---
 - name: hellow world
-  hosts: localhost
+  hosts: all
   connection: local
   gather_facts: false
   tasks:
