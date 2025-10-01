@@ -7,12 +7,12 @@
     servicenow_user: "admin"
     servicenow_password: "{{ lookup('cypher','secret=secret/snowpass') }}"
     change_request_payload:
-      short_description: "{{ morpheus['customOptions']['CrShort']}}"
+      short_description: "short secription"
       description: "Updating Apache server to latest stable version"
-      category: "{{ morpheus['customOptions']['CRCategoryList'] }}"
-      priority: "{{ morpheus['customOptions']['CrPriority'] }}"
-      risk: "{{ morpheus['customOptions']['CrRisk'] }}"
-      type: "{{ morpheus['customOptions']['CrType']}}"
+      category: "Medium"
+      priority: "Low"
+      risk: "high}"
+      type: "software"
     polling_interval: 60  # seconds
     max_retries: 30       # total wait time = polling_interval * max_retries
 
