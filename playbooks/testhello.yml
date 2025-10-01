@@ -2,7 +2,7 @@
 - name: hellow world
   hosts: local
   connection: local
-  gather_facts: false
+  gather_facts: yes
   tasks:
     - name: print hello world
       debug:
