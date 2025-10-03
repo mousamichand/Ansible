@@ -1,6 +1,6 @@
 ---
 - name: Update Morpheus instance with fqdn tag
-  hosts: localhost
+  hosts: all
   gather_facts: no
   vars:
     morpheus_api_url: "{{ morpheus['morpheus']['applianceUrl']}}"
