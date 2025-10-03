@@ -17,16 +17,14 @@
         -H "Authorization: Bearer {{ morpheus_api_token }}"
         -H "Content-Type: application/json"
         -d '{
-  "instance": {
-    "tags": [
-       {
-        "name": "env",
-        "value": "name.com"
-       }
-       ]
-       }
+        "instance": {
+          "tags": [
+          {
+            "name": "env",
+             "value": "name.com"
+           }
+          ]
+           }
       register: update_response
 
-    - name: Debug API response
-      debug:
-        var: update_response.stdout
+    
