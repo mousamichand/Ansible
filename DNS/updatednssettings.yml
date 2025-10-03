@@ -13,12 +13,7 @@
         name: NetworkManager
         state: present
 
-    - name: Check if nmcli command exists
-      ansible.builtin.command: which nmcli
-      register: nmcli_check
-      failed_when: nmcli_check.rc != 0
-      changed_when: false
-
+    
     - name: Set primary and secondary DNS
       ansible.builtin.command: >
         nmcli connection modify {{ interface_name }}
