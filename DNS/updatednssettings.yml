@@ -1,10 +1,9 @@
 ---
-- name: Remove existing DNS, set new DNS and domain on RHEL 9
+- name: Set IPv4 DNS and search domain on RHEL 9 (IPv6 ignored)
   hosts: all
   become: yes
   vars:
-    primary_dns: "8.8.8.8"
-    secondary_dns: "8.8.4.4"
+    ipv4_dns: "8.8.8.8 8.8.4.4"
     search_domain: "example.com"
 
   tasks:
@@ -13,18 +12,25 @@
       register: active_conns
       changed_when: false
 
-    - name: Remove existing DNS, set new DNS and domain
+    - name: Remove existing IPv4 DNS and set new DNS + search domain
       shell: |
-        # Clear existing DNS
         nmcli connection modify "{{ item }}" ipv4.dns ""
-        # Set new DNS
-        nmcli connection modify "{{ item }}" ipv4.dns "{{ primary_dns }} {{ secondary_dns }}"
-        # Set domain/search suffix
+        nmcli connection modify "{{ item }}" ipv4.dns "{{ ipv4_dns }}"
         nmcli connection modify "{{ item }}" ipv4.dns-search "{{ search_domain }}"
-        # Ignore automatic DNS from DHCP
         nmcli connection modify "{{ item }}" ipv4.ignore-auto-dns yes
+        nmcli connection modify "{{ item }}" ipv4.method manual
       loop: "{{ active_conns.stdout_lines }}"
 
     - name: Reactivate connections to apply changes
       shell: nmcli connection down "{{ item }}" && nmcli connection up "{{ item }}"
       loop: "{{ active_conns.stdout_lines }}"
+
+    - name: Verify applied IPv4 DNS and search domain
+      command: nmcli connection show "{{ item }}"
+      loop: "{{ active_conns.stdout_lines }}"
+      register: nmcli_verify
+
+    - name: Print applied IPv4 DNS and search domain
+      debug:
+        msg: "{{ item.stdout_lines | select('search','dns') | list }}"
+      loop: "{{ nmcli_verify.results }}"
