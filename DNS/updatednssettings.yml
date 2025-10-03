@@ -1,10 +1,11 @@
 ---
-- name: Remove existing DNS and set new DNS on RHEL 9
-  hosts: all
+- name: Remove existing DNS, set new DNS and domain on RHEL 9
+  hosts: rhel9_servers
   become: yes
   vars:
     primary_dns: "8.8.8.8"
     secondary_dns: "8.8.4.4"
+    search_domain: "example.com"
 
   tasks:
     - name: Get active NetworkManager connection names
@@ -12,13 +13,15 @@
       register: active_conns
       changed_when: false
 
-    - name: Remove existing DNS and set new DNS
+    - name: Remove existing DNS, set new DNS and domain
       shell: |
-        # Clear any existing DNS
+        # Clear existing DNS
         nmcli connection modify "{{ item }}" ipv4.dns ""
         # Set new DNS
         nmcli connection modify "{{ item }}" ipv4.dns "{{ primary_dns }} {{ secondary_dns }}"
-        # Prevent DHCP from overwriting DNS
+        # Set domain/search suffix
+        nmcli connection modify "{{ item }}" ipv4.dns-search "{{ search_domain }}"
+        # Ignore automatic DNS from DHCP
         nmcli connection modify "{{ item }}" ipv4.ignore-auto-dns yes
       loop: "{{ active_conns.stdout_lines }}"
 
