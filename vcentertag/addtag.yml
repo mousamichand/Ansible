@@ -6,23 +6,10 @@
     morpheus_api_url: "https://morpheus.example.com/api"
     morpheus_api_token: "YOUR_API_TOKEN"
     morpheus_instance_id: "123"   # Pass in as extra var or lookup
+    domainName: "{{ morpheus['server']['domainName'] }}"
 
   tasks:
-    - name: Get Morpheus instance details
-      uri:
-        url: "{{ morpheus_api_url }}/instances/{{ morpheus_instance_id }}"
-        method: GET
-        headers:
-          Authorization: "Bearer {{ morpheus_api_token }}"
-        return_content: yes
-        validate_certs: false
-      register: morpheus_instance
-
-    - name: Extract instance and domain
-      set_fact:
-        instance_name: "{{ morpheus_instance.json.instance.name }}"
-        domain_name: "{{ morpheus_instance.json.instance.networkDomain }}"
-        fqdn: "{{ instance_name }}.{{ domain_name }}"
+   
 
     - name: Update Morpheus instance with fqdn tag
       uri:
