@@ -1,6 +1,6 @@
 ---
 - name: Override primary and secondary DNS on RHEL 9
-  hosts: rhel9_servers
+  hosts: all
   become: yes
   vars:
     primary_dns: "8.8.8.8"
