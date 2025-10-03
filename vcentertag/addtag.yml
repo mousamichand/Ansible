@@ -20,6 +20,7 @@
           Content-Type: "application/json"
         body_format: json
         validate_certs: no
+        use_ssl: no
         body:
           instance:
             tags:
