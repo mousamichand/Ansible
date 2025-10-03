@@ -33,25 +33,25 @@
 
     - name: Set primary and secondary DNS
       ansible.builtin.command: >
-        nmcli connection modify {{ active_interface }}
+        nmcli connection modify eth0
         ipv4.dns "{{ primary_dns }},{{ secondary_dns }}"
       register: dns_update
       failed_when: dns_update.rc != 0
 
     - name: Ensure DNS settings are applied even if using DHCP
       ansible.builtin.command: >
-        nmcli connection modify {{ active_interface }} ipv4.ignore-auto-dns no
+        nmcli connection modify eth0 ipv4.ignore-auto-dns no
       register: ignore_auto_dns
       failed_when: ignore_auto_dns.rc != 0
 
     - name: Reload the network connection
       ansible.builtin.command: >
-        nmcli connection down {{ active_interface }} && nmcli connection up {{ active_interface }}
+        nmcli connection down eth0 && nmcli connection up eth0
       register: restart_network
       failed_when: restart_network.rc != 0
 
     - name: Verify DNS settings
-      ansible.builtin.command: nmcli dev show {{ active_interface }}
+      ansible.builtin.command: nmcli dev show eth0
       register: dns_check
       failed_when: dns_check.rc != 0
 
