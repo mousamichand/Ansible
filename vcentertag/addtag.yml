@@ -19,6 +19,7 @@
           Authorization: "Bearer {{ morpheus_api_token }}"
           Content-Type: "application/json"
         body_format: json
+        validate_certs: no
         body:
           instance:
             tags:
