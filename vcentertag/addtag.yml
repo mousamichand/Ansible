@@ -3,14 +3,15 @@
   hosts: localhost
   gather_facts: no
   vars:
-    morpheus_api_url: "https://morpheus.example.com/api"
-    morpheus_api_token: "YOUR_API_TOKEN"
-    morpheus_instance_id: "123"   # Pass in as extra var or lookup
-    domainName: "{{ morpheus['server']['domainName'] }}"
+    morpheus_api_url: "{{ morpheus['morpheus']['applianceUrl']}}"
+    morpheus_api_token: "{{morpheus['morpheus']['getApiAccessToken']}}"
+    morpheus_instance_id: "{{}morpheus['instance']['id'] }}"   # Pass in as extra var or lookup
+    morpheus_instance_name: "{{}morpheus['instance']['name'] }}"
+    domainName: "{{ morpheus['instance']['domainName'] }}"
+    fqdn: "{{ morpheus_instance_name }}.{{  domainName }}"
 
-  tasks:
+  tasks
    
-
     - name: Update Morpheus instance with fqdn tag
       uri:
         url: "{{ morpheus_api_url }}/instances/{{ morpheus_instance_id }}"
