@@ -1,5 +1,5 @@
 ---
-- name: Override primary and secondary DNS on RHEL 9
+- name: Remove existing DNS and set new DNS on RHEL 9
   hosts: all
   become: yes
   vars:
@@ -7,22 +7,21 @@
     secondary_dns: "8.8.4.4"
 
   tasks:
-    - name: Get active NetworkManager connections
+    - name: Get active NetworkManager connection names
       command: nmcli -t -f NAME connection show --active
       register: active_conns
       changed_when: false
 
-    - name: Set DNS servers for active connections
-      community.general.nmcli:
-        type: ethernet
-        conn_name: "{{ item }}"
-        dns4:
-          - "{{ primary_dns }}"
-          - "{{ secondary_dns }}"
-        state: present
+    - name: Remove existing DNS and set new DNS
+      shell: |
+        # Clear any existing DNS
+        nmcli connection modify "{{ item }}" ipv4.dns ""
+        # Set new DNS
+        nmcli connection modify "{{ item }}" ipv4.dns "{{ primary_dns }} {{ secondary_dns }}"
+        # Prevent DHCP from overwriting DNS
+        nmcli connection modify "{{ item }}" ipv4.ignore-auto-dns yes
       loop: "{{ active_conns.stdout_lines }}"
 
-    - name: Restart NetworkManager to apply changes
-      systemd:
-        name: NetworkManager
-        state: restarted
+    - name: Reactivate connections to apply changes
+      shell: nmcli connection down "{{ item }}" && nmcli connection up "{{ item }}"
+      loop: "{{ active_conns.stdout_lines }}"
