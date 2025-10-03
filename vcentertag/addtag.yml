@@ -1,14 +1,11 @@
 ---
-- name: Tag vCenter VM with FQDN from Morpheus
+- name: Update Morpheus instance with fqdn tag
   hosts: localhost
   gather_facts: no
   vars:
     morpheus_api_url: "https://morpheus.example.com/api"
     morpheus_api_token: "YOUR_API_TOKEN"
-    vcenter_hostname: "vcenter.example.com"
-    vcenter_username: "administrator@vsphere.local"
-    vcenter_password: "YOUR_VCENTER_PASSWORD"
-    validate_certs: false
+    morpheus_instance_id: "123"   # Pass in as extra var or lookup
 
   tasks:
     - name: Get Morpheus instance details
@@ -25,16 +22,24 @@
       set_fact:
         instance_name: "{{ morpheus_instance.json.instance.name }}"
         domain_name: "{{ morpheus_instance.json.instance.networkDomain }}"
-        fqdn: "{{ morpheus_instance.json.instance.name }}.{{ morpheus_instance.json.instance.networkDomain }}"
+        fqdn: "{{ instance_name }}.{{ domain_name }}"
 
-    - name: Tag VM in vCenter with fqdn
-      community.vmware.vmware_guest_custom_attributes:
-        hostname: "{{ vcenter_hostname }}"
-        username: "{{ vcenter_username }}"
-        password: "{{ vcenter_password }}"
-        validate_certs: "{{ validate_certs }}"
-        name: "{{ instance_name }}"   # VM name in vCenter must match
-        folder: "/Datacenter/vm"
-        attributes:
-          - name: fqdn
-            value: "{{ fqdn }}"
+    - name: Update Morpheus instance with fqdn tag
+      uri:
+        url: "{{ morpheus_api_url }}/instances/{{ morpheus_instance_id }}"
+        method: PUT
+        headers:
+          Authorization: "Bearer {{ morpheus_api_token }}"
+          Content-Type: "application/json"
+        body_format: json
+        body:
+          instance:
+            tags:
+              fqdn: "{{ fqdn }}"
+        status_code: 200
+        validate_certs: false
+      register: update_response
+
+    - name: Debug update response
+      debug:
+        var: update_response.json
