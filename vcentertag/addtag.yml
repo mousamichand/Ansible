@@ -25,7 +25,7 @@
             tags:
               fqdn: "{{ fqdn }}"
         status_code: 200
-        validate_certs: false
+        validate_certs: no
       register: update_response
 
     - name: Debug update response
