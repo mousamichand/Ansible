@@ -1,0 +1,58 @@
+---
+- name: Configure FQDN and DNS on RHEL 9
+  hosts: all
+  become: yes
+  vars:
+    fqdn: "server01.example.com"   # New FQDN
+    short_hostname: "server01"     # Short hostname
+    primary_dns: "8.8.8.8"
+    secondary_dns: "8.8.4.4"
+    search_domain: "example.com"
+    interface_name: "eth0"          # Change to your actual interface
+
+  tasks:
+    - name: Set the system hostname (FQDN)
+      ansible.builtin.hostname:
+        name: "{{ fqdn }}"
+
+    - name: Update /etc/hosts with new FQDN
+      lineinfile:
+        path: /etc/hosts
+        regexp: "127\\.0\\.1\\.1"
+        line: "127.0.1.1 {{ fqdn }} {{ short_hostname }}"
+        state: present
+        backup: yes
+
+    - name: Set primary and secondary DNS
+      ansible.builtin.command: >
+        nmcli connection modify {{ interface_name }}
+        ipv4.dns "{{ primary_dns }},{{ secondary_dns }}"
+      register: dns_update
+      changed_when: dns_update.rc == 0
+
+    - name: Set search domain
+      ansible.builtin.command: >
+        nmcli connection modify {{ interface_name }}
+        ipv4.dns-search "{{ search_domain }}"
+      register: domain_update
+      changed_when: domain_update.rc == 0
+
+    - name: Ensure DNS settings are applied
+      ansible.builtin.command: >
+        nmcli connection modify {{ interface_name }} ipv4.ignore-auto-dns no
+      register: ignore_auto_dns
+      changed_when: ignore_auto_dns.rc == 0
+
+    - name: Reload network connection
+      ansible.builtin.command: >
+        nmcli connection down {{ interface_name }} && nmcli connection up {{ interface_name }}
+      register: restart_network
+      changed_when: restart_network.rc == 0
+
+    - name: Verify hostname and DNS settings
+      ansible.builtin.command: hostnamectl
+      register: hostname_check
+
+    - name: Display hostname information
+      ansible.builtin.debug:
+        var: hostname_check.stdout_lines
