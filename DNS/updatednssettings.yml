@@ -1,60 +1,28 @@
 ---
-- name: Update DNS on RHEL 9 hosts (auto-detect active interface)
-  hosts: all
+- name: Override primary and secondary DNS on RHEL 9
+  hosts: rhel9_servers
   become: yes
   vars:
     primary_dns: "8.8.8.8"
     secondary_dns: "8.8.4.4"
 
   tasks:
-    - name: Ensure NetworkManager package is installed
-      ansible.builtin.yum:
-        name: NetworkManager
+    - name: Get active NetworkManager connections
+      command: nmcli -t -f NAME connection show --active
+      register: active_conns
+      changed_when: false
+
+    - name: Set DNS servers for active connections
+      community.general.nmcli:
+        type: ethernet
+        conn_name: "{{ item }}"
+        dns4:
+          - "{{ primary_dns }}"
+          - "{{ secondary_dns }}"
         state: present
+      loop: "{{ active_conns.stdout_lines }}"
 
-    - name: Check if nmcli command exists
-      ansible.builtin.command: which nmcli
-      register: nmcli_check
-      failed_when: nmcli_check.rc != 0
-      changed_when: false
-
-    - name: Detect active (primary) interface
-      ansible.builtin.command: nmcli -t -f DEVICE,STATE device status
-      register: interfaces
-      changed_when: false
-
-    - name: Set active interface fact
-      ansible.builtin.set_fact:
-        active_interface: "{{ interfaces.stdout_lines | map('split', ':') | selectattr('1','equalto','connected') | map('first') | list | first }}"
-
-    - name: Debug active interface
-      ansible.builtin.debug:
-        msg: "Active interface detected: {{ active_interface }}"
-
-    - name: Set primary and secondary DNS
-      ansible.builtin.command: >
-        nmcli connection modify system eth0
-        ipv4.dns "{{ primary_dns }},{{ secondary_dns }}"
-      register: dns_update
-      failed_when: dns_update.rc != 0
-
-    - name: Ensure DNS settings are applied even if using DHCP
-      ansible.builtin.command: >
-        nmcli connection modify system eth0 ipv4.ignore-auto-dns no
-      register: ignore_auto_dns
-      failed_when: ignore_auto_dns.rc != 0
-
-    - name: Reload the network connection
-      ansible.builtin.command: >
-        nmcli connection down eth0 && nmcli connection up system eth0
-      register: restart_network
-      failed_when: restart_network.rc != 0
-
-    - name: Verify DNS settings
-      ansible.builtin.command: nmcli dev show eth0
-      register: dns_check
-      failed_when: dns_check.rc != 0
-
-    - name: Display current DNS settings
-      ansible.builtin.debug:
-        var: dns_check.stdout_lines
+    - name: Restart NetworkManager to apply changes
+      systemd:
+        name: NetworkManager
+        state: restarted
