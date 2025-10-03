@@ -10,8 +10,7 @@
     domainName: "{{ morpheus['instance']['domainName'] }}"
     fqdn: "{{ morpheus_instance_name }}.{{  domainName }}"
 
-  tasks
-   
+  tasks:
     - name: Update Morpheus instance with fqdn tag
       uri:
         url: "{{ morpheus_api_url }}/instances/{{ morpheus_instance_id }}"
