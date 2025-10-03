@@ -24,7 +24,7 @@
              "value": "name.com"
            }
           ]
-           }
+           }'
       register: update_response
 
     
