@@ -15,11 +15,11 @@
     - name: Update fqdn tag (curl)
       ansible.builtin.command: >
         curl -k -X PUT
-        -U  {{morpheus_api_url}} 
+        -U  {{ morpheus_api_url }}/instances/{{ morpheus_instance_id }}
         -H "Authorization: Bearer {{ morpheus_api_token }}"
         -H "Content-Type: application/json"
         -d '{"instance":{"tags":[{"fqdn":"{{ fqdn }}"}]}}'
-        {{ morpheus_api_url }}/instances/{{ morpheus_instance_id }}
+        
       register: update_response
 
     - name: Debug API response
