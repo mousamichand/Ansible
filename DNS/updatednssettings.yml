@@ -1,0 +1,48 @@
+---
+- name: Update Primary and Secondary DNS on RHEL 9 hosts
+  hosts: all
+  become: yes
+  vars:
+    interface_name: "eth0"       # Replace with your interface name
+    primary_dns: "8.8.8.8"
+    secondary_dns: "8.8.4.4"
+
+  tasks:
+    - name: Ensure NetworkManager package (nmcli) is installed
+      ansible.builtin.yum:
+        name: NetworkManager
+        state: present
+
+    - name: Check if nmcli command exists
+      ansible.builtin.command: which nmcli
+      register: nmcli_check
+      failed_when: nmcli_check.rc != 0
+      changed_when: false
+
+    - name: Set primary and secondary DNS
+      ansible.builtin.command: >
+        nmcli connection modify {{ interface_name }}
+        ipv4.dns "{{ primary_dns }},{{ secondary_dns }}"
+      register: dns_update
+      failed_when: dns_update.rc != 0
+
+    - name: Ensure DNS settings are applied even if using DHCP
+      ansible.builtin.command: >
+        nmcli connection modify {{ interface_name }} ipv4.ignore-auto-dns no
+      register: ignore_auto_dns
+      failed_when: ignore_auto_dns.rc != 0
+
+    - name: Reload the network connection
+      ansible.builtin.command: >
+        nmcli connection down {{ interface_name }} && nmcli connection up {{ interface_name }}
+      register: restart_network
+      failed_when: restart_network.rc != 0
+
+    - name: Verify DNS settings
+      ansible.builtin.command: nmcli dev show {{ interface_name }}
+      register: dns_check
+      failed_when: dns_check.rc != 0
+
+    - name: Display current DNS settings
+      ansible.builtin.debug:
+        var: dns_check.stdout_lines
