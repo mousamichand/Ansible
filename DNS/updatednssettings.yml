@@ -1,40 +1,57 @@
 ---
-- name: Update Primary and Secondary DNS on RHEL 9 hosts
+- name: Update DNS on RHEL 9 hosts (auto-detect active interface)
   hosts: all
   become: yes
   vars:
-    interface_name: "eth0"       # Replace with your interface name
     primary_dns: "8.8.8.8"
     secondary_dns: "8.8.4.4"
 
   tasks:
-    - name: Ensure NetworkManager package (nmcli) is installed
+    - name: Ensure NetworkManager package is installed
       ansible.builtin.yum:
         name: NetworkManager
         state: present
 
-    
+    - name: Check if nmcli command exists
+      ansible.builtin.command: which nmcli
+      register: nmcli_check
+      failed_when: nmcli_check.rc != 0
+      changed_when: false
+
+    - name: Detect active (primary) interface
+      ansible.builtin.command: nmcli -t -f DEVICE,STATE device status
+      register: interfaces
+      changed_when: false
+
+    - name: Set active interface fact
+      ansible.builtin.set_fact:
+        active_interface: "{{ interfaces.stdout_lines | map('split', ':') | selectattr('1','equalto','connected') | map('first') | list | first }}"
+
+    - name: Debug active interface
+      ansible.builtin.debug:
+        msg: "Active interface detected: {{ active_interface }}"
+
     - name: Set primary and secondary DNS
       ansible.builtin.command: >
-        nmcli connection modify {{ interface_name }}
+        nmcli connection modify {{ active_interface }}
         ipv4.dns "{{ primary_dns }},{{ secondary_dns }}"
       register: dns_update
       failed_when: dns_update.rc != 0
 
     - name: Ensure DNS settings are applied even if using DHCP
       ansible.builtin.command: >
-        nmcli connection modify {{ interface_name }} ipv4.ignore-auto-dns no
+        nmcli connection modify {{ active_interface }} ipv4.ignore-auto-dns no
       register: ignore_auto_dns
       failed_when: ignore_auto_dns.rc != 0
 
     - name: Reload the network connection
       ansible.builtin.command: >
-        nmcli connection down {{ interface_name }} && nmcli connection up {{ interface_name }}
+        nmcli connection down {{ active_interface }} && nmcli connection up {{ active_interface }}
       register: restart_network
       failed_when: restart_network.rc != 0
 
     - name: Verify DNS settings
-      ansible.builtin.command: nmcli dev show {{ interface_name }}
+      ansible.builtin.command: nmcli dev show {{ active_interface }}
       register: dns_check
       failed_when: dns_check.rc != 0
 
