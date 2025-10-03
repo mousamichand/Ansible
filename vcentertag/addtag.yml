@@ -16,7 +16,7 @@
         curl -k -X PUT
         -H "Authorization: Bearer {{ morpheus_api_token }}"
         -H "Content-Type: application/json"
-        -d '{"instance":{"tags":{"fqdn":"{{ fqdn }}"}}}'
+        -d '{"instance":{"addTags":[{"fqdn":"{{ fqdn }}"}]}'
         {{ morpheus_api_url }}/instances/{{ morpheus_instance_id }}
       register: update_response
 
