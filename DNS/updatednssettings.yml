@@ -7,6 +7,12 @@
     search_domain: "test.com"
 
   tasks:
+    - name: Ensure this runs only on RHEL OS family
+      assert:
+        that:
+          - ansible_os_family == "RedHat"
+        fail_msg: "This playbook only supports RHEL-family systems (RHEL, Rocky, Alma, CentOS)."
+        success_msg: "RHEL-family detected, continuing..."  
     - name: Get active NetworkManager connection names
       command: nmcli -t -f NAME,TYPE connection show --active
       register: active_conns
