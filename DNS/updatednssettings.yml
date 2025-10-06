@@ -1,5 +1,5 @@
 ---
-- name: Set IPv4 DNS and search domain on RHEL 9 reliably
+- name: Set IPv4 DNS and search domain on RHEL 9 reliably (nmcli only)
   hosts: all
   become: yes
   vars:
@@ -14,16 +14,17 @@
 
     - name: Apply IPv4 DNS and search domain
       shell: |
-        nmcli connection modify "{{ item.name }}" ipv4.method manual
-        nmcli connection modify "{{ item.name }}" ipv4.dns "{{ ipv4_dns }}"
-        nmcli connection modify "{{ item.name }}" ipv4.dns-search "{{ search_domain }}"
-        nmcli connection modify "{{ item.name }}" ipv4.ignore-auto-dns yes
-      loop: "{{ active_conns.stdout_lines | map('split', ':') | map('first') | map('regex_replace','^(.*)$','{\"name\":\"\\1\"}') | map('from_json') | list }}"
-
-    - name: Reactivate connections to apply changes
-      shell: nmcli connection down "{{ item.name }}" && nmcli connection up "{{ item.name }}"
-      loop: "{{ active_conns.stdout_lines | map('split', ':') | map('first') | map('regex_replace','^(.*)$','{\"name\":\"\\1\"}') | map('from_json') | list }}"
+        nmcli connection modify "{{ item }}" ipv4.dns "{{ ipv4_dns }}"
+        nmcli connection modify "{{ item }}" ipv4.dns-search "{{ search_domain }}"
+        nmcli connection modify "{{ item }}" ipv4.ignore-auto-dns yes
+      loop: "{{ active_conns.stdout_lines | map('split', ':') | map('first') | list }}"
+      notify: Reload NM connection
 
     - name: Flush systemd-resolved DNS cache (if present)
       command: resolvectl flush-caches
       ignore_errors: yes
+
+  handlers:
+    - name: Reload NM connection
+      shell: nmcli connection up "{{ item }}"
+      loop: "{{ active_conns.stdout_lines | map('split', ':') | map('first') | list }}"
