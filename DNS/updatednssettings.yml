@@ -1,22 +1,18 @@
 ---
-- name: Set IPv4 DNS and search domain on RHEL 9 reliably (nmcli only)
+- name: Set IPv4 DNS and search domain on RHEL-family hosts
   hosts: all
   become: yes
+  gather_facts: yes
   vars:
     ipv4_dns: "8.8.8.8 8.8.4.4"
-    search_domain: "test.com"
+    search_domain: "example.com"
 
   tasks:
-    - name: Ensure this runs only on RHEL OS family
-      assert:
-        that:
-          - ansible_os_family == "RedHat"
-        fail_msg: "This playbook only supports RHEL-family systems (RHEL, Rocky, Alma, CentOS)."
-        success_msg: "RHEL-family detected, continuing..."  
     - name: Get active NetworkManager connection names
       command: nmcli -t -f NAME,TYPE connection show --active
       register: active_conns
       changed_when: false
+      when: ansible_os_family == "RedHat"
 
     - name: Apply IPv4 DNS and search domain
       shell: |
@@ -24,13 +20,16 @@
         nmcli connection modify "{{ item }}" ipv4.dns-search "{{ search_domain }}"
         nmcli connection modify "{{ item }}" ipv4.ignore-auto-dns yes
       loop: "{{ active_conns.stdout_lines | map('split', ':') | map('first') | list }}"
+      when: ansible_os_family == "RedHat"
       notify: Reload NM connection
 
     - name: Flush systemd-resolved DNS cache (if present)
       command: resolvectl flush-caches
       ignore_errors: yes
+      when: ansible_os_family == "RedHat"
 
   handlers:
     - name: Reload NM connection
       shell: nmcli connection up "{{ item }}"
       loop: "{{ active_conns.stdout_lines | map('split', ':') | map('first') | list }}"
+      when: ansible_os_family == "RedHat"
