@@ -4,8 +4,8 @@
   become: yes
   gather_facts: yes
   vars:
-    ipv4_dns: "8.8.8.8 8.8.4.4"  #  can be replaced with forms input  {{ morpheus['customOptions']['varname'] }}
-    search_domain: "example.com"  #  can be replaced with forms input  {{ morpheus['customOptions']['varname'] }}
+    ipv4_dns: "8.8.8.8 8.8.4.4"  #  can be replaced with form input  {{ morpheus['customOptions']['varname'] }}
+    search_domain: "example.com"  #  can be replaced with form input  {{ morpheus['customOptions']['varname'] }}
 
   tasks:
     - name: Get active NetworkManager connection names
