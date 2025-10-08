@@ -1,5 +1,5 @@
 ---
-tasks:
+
 - name: Update Morpheus instance with fqdn tag
   hosts: all
   gather_facts: no
@@ -10,6 +10,8 @@ tasks:
     morpheus_instance_name: "{{ morpheus['instance']['name'] }}"
     domainName: "{{ morpheus['instance']['domainName'] }}"
     fqdn: "{{ morpheus_instance_name }}.{{  domainName }}"
+    
+  tasks:   
 
 - name: Update FQDN tag in Morpheus (Linux)
   ansible.builtin.uri:
