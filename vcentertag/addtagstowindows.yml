@@ -1,5 +1,4 @@
 ---
-
 - name: Update Morpheus instance with fqdn tag
   hosts: all
   gather_facts: no
