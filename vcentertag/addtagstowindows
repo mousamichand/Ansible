@@ -1,0 +1,45 @@
+---
+- name: Update Morpheus instance with fqdn tag
+  hosts: all
+  gather_facts: no
+  vars:
+    morpheus_api_url: "https://10.32.20.128/api"
+    morpheus_api_token: "{{ lookup('cypher','secret=secret/accesstoken') }}"
+    morpheus_instance_id: "{{ morpheus['instance']['id'] }}"   # Pass in as extra var or lookup
+    morpheus_instance_name: "{{ morpheus['instance']['name'] }}"
+    domainName: "{{ morpheus['instance']['domainName'] }}"
+    fqdn: "{{ morpheus_instance_name }}.{{  domainName }}"
+
+- name: Update FQDN tag in Morpheus (Linux)
+  ansible.builtin.uri:
+    url: "{{ morpheus_api_url }}/instances/{{ morpheus_instance_id }}"
+    method: PUT
+    headers:
+      Authorization: "Bearer {{ morpheus_api_token }}"
+      Content-Type: "application/json"
+    body_format: json
+    body:
+      instance:
+        addTags:
+          - name: fqdn
+            value: "{{ fqdn }}"
+    validate_certs: no
+  register: morpheus_update
+  when: ansible_os_family != "Windows"
+
+- name: Update FQDN tag in Morpheus (Windows)
+  ansible.windows.win_uri:
+    url: "{{ morpheus_api_url }}/instances/{{ morpheus_instance_id }}"
+    method: PUT
+    headers:
+      Authorization: "Bearer {{ morpheus_api_token }}"
+      Content-Type: "application/json"
+    body_format: json
+    body:
+      instance:
+        addTags:
+          - name: fqdn
+            value: "{{ fqdn }}"
+    validate_certs: no
+  register: morpheus_update
+  when: ansible_os_family == "Windows"
