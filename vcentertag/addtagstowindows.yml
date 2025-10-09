@@ -33,7 +33,7 @@
           Authorization: "Bearer {{ morpheus_api_token }}"
           Content-Type: "application/json"
         
-       body: "{{ {
+      body: "{{ {
       'instance': {
         'addTags': [
           {
