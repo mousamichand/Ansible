@@ -8,9 +8,8 @@
     morpheus_instance_id: "{{ morpheus['instance']['id'] }}"   # Pass in as extra var or lookup
     morpheus_instance_name: "{{ morpheus['instance']['name'] }}"
     domainName: "{{ morpheus['instance']['domainName'] }}"
-    fqdn: "{{ morpheus_instance_name }}.{{  domainName }}"
+    fqdn: "{{ morpheus_instance_name }}.{{ domainName }}"
 
-   
   tasks:
     - name: Update FQDN tag in Morpheus (Linux)
       ansible.builtin.uri:
@@ -20,7 +19,7 @@
           Authorization: "Bearer {{ morpheus_api_token }}"
           Content-Type: "application/json"
         body_format: json
-        body: "{{ {'instance': {'tags': {'fqdn': fqdn}}} | to_json }}"   
+        body: "{{ {'instance': {'tags': {'fqdn': fqdn}}} | to_json }}"
         validate_certs: no
       register: morpheus_update
       when: ansible_os_family != "Windows"
@@ -32,9 +31,9 @@
         headers:
           Authorization: "Bearer {{ morpheus_api_token }}"
           Content-Type: "application/json"
-        
-      body: "{{ {       'instance': {         'addTags': [           {             'name': 'fqdn',             'value': fqdn           }         ]       }     } | to_json }}"
-      validate_certs: no
-      return_content: true
-    register: morpheus_update
-    when: ansible_os_family == "Windows"
+        body: >-
+          {{
+            {
+              'instance': {
+                'addTags': [
+                  {
