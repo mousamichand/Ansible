@@ -33,11 +33,16 @@
           Authorization: "Bearer {{ morpheus_api_token }}"
           Content-Type: "application/json"
         
-        body:
-          instance:
-            addTags:
-              - name: fqdn
-                value: "{{ fqdn }}"
+       body: "{{ {
+      'instance': {
+        'addTags': [
+          {
+            'name': 'fqdn',
+            'value': fqdn
+          }
+        ]
+      }
+    } | to_json }}"
         validate_certs: no
         return_content: true
       register: morpheus_update
