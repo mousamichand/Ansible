@@ -39,5 +39,6 @@
               - name: fqdn
                 value: "{{ fqdn }}"
         validate_certs: no
+        return_content: true
       register: morpheus_update
       when: ansible_os_family == "Windows"
