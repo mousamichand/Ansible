@@ -2,10 +2,11 @@
 - name: Update Morpheus tags on Linux and Windows
   hosts: all
   gather_facts: yes
+
   vars:
     morpheus_api_url: "https://10.32.20.128/api"
-    morpheus_api_token: "{{ lookup('cypher','secret=secret/accesstoken') }}"
-    morpheus_instance_id: "{{ morpheus['instance']['id'] }}"   # Pass in as extra var or lookup
+    morpheus_api_token: "{{ lookup('cypher', 'secret=secret/accesstoken') }}"
+    morpheus_instance_id: "{{ morpheus['instance']['id'] }}"
     morpheus_instance_name: "{{ morpheus['instance']['name'] }}"
     domainName: "{{ morpheus['instance']['domainName'] }}"
     fqdn: "{{ morpheus_instance_name }}.{{ domainName }}"
@@ -37,3 +38,14 @@
               'instance': {
                 'addTags': [
                   {
+                    'name': 'fqdn',
+                    'value': fqdn
+                  }
+                ]
+              }
+            } | to_json
+          }}
+        validate_certs: no
+        return_content: true
+      register: morpheus_update
+      when: ansible_os_family == "Windows"
