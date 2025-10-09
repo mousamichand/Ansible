@@ -27,7 +27,7 @@
                 value: "{{ fqdn }}"
         validate_certs: no
       register: morpheus_update
-      when: ansible_os_family != "Windows"
+      when: ansible_distribution == "RedHat"
 
     - name: Update FQDN tag in Morpheus (Windows)
       ansible.windows.win_uri:
