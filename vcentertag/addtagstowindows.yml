@@ -20,7 +20,11 @@
           Authorization: "Bearer {{ morpheus_api_token }}"
           Content-Type: "application/json"
         body_format: json
-        body: "{{ {'instance': {'addtags': {'fqdn': fqdn}}} }}"
+        body:
+          instance:
+            addTags:
+              - name: fqdn
+                value: "{{ fqdn }}"
         validate_certs: no
       register: morpheus_update
       when: ansible_os_family != "Windows"
