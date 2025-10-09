@@ -1,5 +1,5 @@
 ---
-- name: Update Morpheus tags on Linux and Windows
+- name: Update Morpheus tags on Rhel and Windows
   hosts: all
   gather_facts: yes
 
