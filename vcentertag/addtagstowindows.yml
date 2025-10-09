@@ -5,7 +5,7 @@
 
   vars:
     morpheus_api_url: "https://10.32.20.128/api"
-    morpheus_api_token: "{{ lookup('cypher', 'secret=secret/accesstoken') }}"
+    morpheus_api_token: "{{morpheus['morpheus']['apiAccessToken'] }}"
     morpheus_instance_id: "{{ morpheus['instance']['id'] }}"
     morpheus_instance_name: "{{ morpheus['instance']['name'] }}"
     domainName: "{{ morpheus['instance']['domainName'] }}"
