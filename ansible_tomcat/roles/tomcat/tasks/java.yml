@@ -1,15 +1,5 @@
-- name: Install Java from JDK archive
-  hosts: all
-  become: yes
-  vars:
-    #java_version: 21               # Change to 8, 17, or 21 as needed
-    java_download_url: "https://download.java.net/java/GA/jdk{{ java_package }}/latest/binaries/openjdk-{{ java_package}}_linux-x64_bin.tar.gz"
-    #install_dir: /u01/Tomcat
-    tarball_name: "openjdk-{{ java_package}}_linux-x64_bin.tar.gz"
-    extracted_dir: "jdk-{{ java_package }}"
-
-  tasks:
-    - name: Ensure install directory exists
+  ---
+  - name: Ensure install directory exists
       file:
         path: "{{ tomcat_root_dir }}"
         state: directory
@@ -17,24 +7,24 @@
         group: tomcat
         mode: '0755'
 
-    - name: Download Java {{ java_package }}
+  - name: Download Java {{ java_package }}
       get_url:
         url: "{{ java_download_url }}"
         dest: "{{ tomcat_root_dir }}/{{ tarball_name }}"
         mode: '0644'
 
-    - name: Extract Java archive
+   - name: Extract Java archive
       unarchive:
         src: "{{ tomcat_root_dir }}/{{ tarball_name }}"
         dest: "{{ tomcat_root_dir }}"
         remote_src: yes
 
-    - name: Rename extracted folder to 'java'
+   - name: Rename extracted folder to 'java'
       command: mv "{{ tomcat_root_dir }}/{{ extracted_dir }}" "{{ tomcat_root_dir }}/java"
       args:
         removes: "{{ tomcat_root_dir }}/{{ extracted_dir }}"
 
-    - name: Set ownership of java directory
+   - name: Set ownership of java directory
       file:
         path: "{{ tomcat_root_dir }}/java"
         state: directory
