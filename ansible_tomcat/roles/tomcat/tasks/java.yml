@@ -20,7 +20,7 @@
     remote_src: yes
 
 - name: Rename extracted folder to 'java'
-  command: mv "/u01/Tomcat/{{ extracted_dir }}" "/u01/Tomcat/java"
+  command: cp -r "/u01/Tomcat/{{ extracted_dir }}" "/u01/Tomcat/java"
  
 
 
