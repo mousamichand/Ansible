@@ -29,7 +29,7 @@ tomcat_group: tomcat
 
 
 # Java variables
-java_package: "{{ morpheus['customOptions']['javaVersion'] }}"
+java_package: "{{ morpheus['customOptions']['javaVersion'] }}.0.2"
 java_home: /usr/lib/jvm/jre
 
 tomcat_full_version: >-
