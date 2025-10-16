@@ -30,7 +30,7 @@ tomcat_group: tomcat
 
 # Java variables
 java_package: "{{ morpheus['customOptions']['javaVersion'] }}"
-java_home: "{{ tomcat_root_dir }}/java"
+java_home: "/u01/Tomcat/java"
 
 extracted_dir: "jdk-17.0.2"
 java_download_url: >-
