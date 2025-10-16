@@ -31,3 +31,15 @@
     recurse: yes
     owner: tomcat
     group: tomcat
+- name: Set JAVA_HOME for Tomcat in setenv.sh
+  copy:
+    dest: "{{ tomcat_root_dir }}/bin/setenv.sh"
+    content: |
+      #!/bin/bash
+      export JAVA_HOME={{ tomcat_root_dir }}/java
+      export PATH=$JAVA_HOME/bin:$PATH
+    owner: tomcat
+    group: tomcat
+    mode: '0755'    
+    
+    
