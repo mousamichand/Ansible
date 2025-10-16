@@ -21,8 +21,7 @@
 
 - name: Rename extracted folder to 'java'
   command: mv "/u01/Tomcat/{{ extracted_dir }}" "/u01/Tomcat/java"
-  args:
-    creates: "/u01/Tomcat/java"
+ 
 
 - name: Set ownership of java directory
   file:
