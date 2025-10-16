@@ -19,9 +19,7 @@
     dest: "/u01/Tomcat"
     remote_src: yes
 
-- name: Rename extracted folder to 'java'
-  command: cp -r "/u01/Tomcat/{{ extracted_dir }}" "/u01/Tomcat/java"
- 
+
 
 
 
