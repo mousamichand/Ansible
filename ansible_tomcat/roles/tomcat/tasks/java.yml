@@ -15,7 +15,7 @@
 
 - name: Extract Java archive
   unarchive:
-    src: "/u01/Tomcat/{{ extracted_dir }}"
+    src: "/u01/Tomcat/{{ tarball_name }}"
     dest: "/u01/Tomcat"
     remote_src: yes
 
