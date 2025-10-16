@@ -63,14 +63,6 @@
     owner: tomcat
     group: tomcat
 
-- name: Ensure Tomcat bin directory exists
-  file:
-    path: "/u01/Tomcat/apache-tomcat/bin"
-    state: directory
-    owner: tomcat
-    group: tomcat
-    mode: '0755'
-
 - name: Create setenv.sh to export JAVA_HOME
   copy:
     dest: "/u01/Tomcat/java/bin/setenv.sh"
