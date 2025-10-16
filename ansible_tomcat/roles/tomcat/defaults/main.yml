@@ -45,7 +45,7 @@ tarball_name: >-
       "openjdk-17.0.2_linux-x64_bin.tar.gz" if java_package== "17"
       else "openjdk-21.0.2_linux-x64_bin.tar.gz" if java_package == "21"
       else "openjdk-8u44-linux-x64.tar.gz" if java_package == "8"
-      else ""
+      else "openjdk-17.0.2_linux-x64_bin.tar.gz"
     ) | trim }}    
 
 tomcat_full_version: >-
