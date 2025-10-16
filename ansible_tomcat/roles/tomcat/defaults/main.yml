@@ -42,7 +42,7 @@ java_download_url: >-
     ) | trim }}
 tarball_name: >-
     {{ (
-      "openjdk-17.0.2_linux-x64_bin.tar.gz" if java_packagen== "17"
+      "openjdk-17.0.2_linux-x64_bin.tar.gz" if java_package== "17"
       else "openjdk-21.0.2_linux-x64_bin.tar.gz" if java_package == "21"
       else "openjdk-8u44-linux-x64.tar.gz" if java_package == "8"
       else ""
