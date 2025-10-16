@@ -33,6 +33,14 @@ java_package: "{{ morpheus['customOptions']['javaVersion'] }}"
 java_home: "/u01/Tomcat/java"
 
 extracted_dir: "jdk-17.0.2"
+
+extracted_dir: >-
+    {{ (
+      "jdk-17.0.2" if java_package== "17"
+      else "jdk-21.0.2" if java_package == "21"
+      else "jdk-8u44" if java_package == "8"
+      else "jdk-17.0.2"
+    ) | trim }}
 java_download_url: >-
     {{ (
       "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz" if java_package== "17"
