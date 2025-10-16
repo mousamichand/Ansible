@@ -15,12 +15,12 @@
 
 - name: Extract Java archive
   unarchive:
-    src: "/u01/Tomcat/{{ tarball_name }}"
+    src: "/u01/Tomcat/{{ extracted_dir }}"
     dest: "/u01/Tomcat"
     remote_src: yes
 
 - name: Rename extracted JDK directory to 'java'
-  command: mv "/u01/Tomcat/{{ tarball_name }}" "/u01/Tomcat/java"
+  command: mv "/u01/Tomcat/{{ extracted_dir }}" "/u01/Tomcat/java"
   args:
     creates: /u01/Tomcat/java
 
