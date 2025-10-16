@@ -29,12 +29,18 @@ tomcat_group: tomcat
 
 
 # Java variables
-java_package: "{{ morpheus['customOptions']['javaVersion'] }}.0.2"
+java_package: "{{ morpheus['customOptions']['javaVersion'] }}"
 java_home: /usr/lib/jvm/jre
 java_download_url: "https://download.java.net/java/GA/jdk{{ java_package }}/latest/binaries/openjdk-{{ java_package}}_linux-x64_bin.tar.gz"
 tarball_name: "openjdk-{{ java_package}}_linux-x64_bin.tar.gz"
 extracted_dir: "jdk-{{ java_package }}"
-
+java_download_url: >-
+    {{ (
+      "https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz" if java_packagen== "17"
+      else "https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz" if java_package == "21"
+      else "https://download.java.net/openjdk/jdk8u44/ri/openjdk-8u44-linux-x64.tar.gz" if java_package == "8"
+      else ""
+    ) | trim }}
 
 tomcat_full_version: >-
     {{ (
