@@ -23,13 +23,7 @@
   command: mv "/u01/Tomcat/{{ extracted_dir }}" "/u01/Tomcat/java"
  
 
-- name: Set ownership of java directory
-  file:
-    path: "/u01/Tomcat/java"
-    state: directory
-    recurse: yes
-    owner: tomcat
-    group: tomcat
+
 
 - name: Create setenv.sh to export JAVA_HOME
   copy:
