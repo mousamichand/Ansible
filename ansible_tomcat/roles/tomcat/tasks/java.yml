@@ -19,6 +19,10 @@
     dest: "/u01/Tomcat"
     remote_src: yes
 
+- name: Rename extracted JDK directory to 'java'
+  command: mv /u01/Tomcat/jdk-17.0.2 /u01/Tomcat/java
+  args:
+    creates: /u01/Tomcat/java
 
 
 
