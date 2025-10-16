@@ -1,7 +1,7 @@
 ---
 - name: Ensure install directory exists
   file:
-    path: "{{ tomcat_root_dir }}"
+    path: "/u01/Tomcat/"
     state: directory
     owner: tomcat
     group: tomcat
@@ -10,23 +10,23 @@
 - name: Download Java {{ java_package }}
   get_url:
     url: "{{ java_download_url }}"
-    dest: "{{ tomcat_root_dir }}/{{ tarball_name }}"
+    dest: "/u01/Tomcat/{{ tarball_name }}"
     mode: '0644'
 
 - name: Extract Java archive
   unarchive:
-    src: "{{ tomcat_root_dir }}/{{ tarball_name }}"
-    dest: "{{ tomcat_root_dir }}"
+    src: "/u01/Tomcat/{{ tarball_name }}"
+    dest: "/u01/Tomcat"
     remote_src: yes
 
 - name: Rename extracted folder to 'java'
-  command: mv "{{ tomcat_root_dir }}/{{ extracted_dir }}" "{{ tomcat_root_dir }}/java"
+  command: mv "/u01/Tomcat/{{ extracted_dir }}" "{{ tomcat_root_dir }}/java"
   args:
-    removes: "{{ tomcat_root_dir }}/{{ extracted_dir }}"
+    removes: "/u01/Tomcat/{{ extracted_dir }}"
 
 - name: Set ownership of java directory
   file:
-    path: "{{ tomcat_root_dir }}/java"
+    path: "/u01/Tomcat/java"
     state: directory
     recurse: yes
     owner: tomcat
