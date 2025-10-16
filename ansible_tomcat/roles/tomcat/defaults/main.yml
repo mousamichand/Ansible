@@ -31,6 +31,10 @@ tomcat_group: tomcat
 # Java variables
 java_package: "{{ morpheus['customOptions']['javaVersion'] }}.0.2"
 java_home: /usr/lib/jvm/jre
+java_download_url: "https://download.java.net/java/GA/jdk{{ java_package }}/latest/binaries/openjdk-{{ java_package}}_linux-x64_bin.tar.gz"
+tarball_name: "openjdk-{{ java_package}}_linux-x64_bin.tar.gz"
+extracted_dir: "jdk-{{ java_package }}"
+
 
 tomcat_full_version: >-
     {{ (
