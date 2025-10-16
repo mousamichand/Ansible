@@ -36,3 +36,18 @@
     owner: tomcat
     group: tomcat
     mode: '0755'
+
+
+- name: Set JAVA_HOME and update PATH system-wide
+  become: true
+  copy:
+    dest: /etc/profile.d/java.sh
+    content: |
+      export JAVA_HOME=/u01/Tomcat/java
+      export PATH=$JAVA_HOME/bin:$PATH
+    mode: '0755'
+    owner: root
+    group: root
+
+
+    
