@@ -3,7 +3,7 @@ mount_point: /u01
 tomcat_root_dir: "{{ mount_point }}/Tomcat"
 tomcat_version:  "{{ morpheus['customOptions']['tomcatVersion'] }}"
 #tomcat_full_version: "11.0.12"
-app_name: crm
+app_name: "{{ morpheus['customOptions']['appName'] }}"
 
 tomcat_disk: /dev/sdb           # Change according to your environment
 partition_number: 1
