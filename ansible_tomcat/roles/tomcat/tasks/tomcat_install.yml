@@ -40,4 +40,23 @@
     recurse: yes
     owner: "{{tomcat_user}}"
     group: "{{tomcat_group}}"
-    mode: "0755"  
+    mode: "0755" 
+- name: Copy conf/ directory from CATALINA_HOME to CATALINA_BASE
+  copy:
+    src: "/u01/Tomcat/Tomcat{{ tomcat_version }}/conf/"
+    dest: "/u01/Tomcat/tomcat-{{ app_name }}/conf/"
+    owner: tomcat
+    group: tomcat
+    mode: '0644'
+    directory_mode: '0755'
+  notify: restart Tomcat
+
+- name: Copy default ROOT webapp from CATALINA_HOME
+  copy:
+    src: "/u01/Tomcat/Tomcat{{ tomcat_version }}/webapps/ROOT"
+    dest: "/u01/Tomcat/tomcat-{{ app_name }}/webapps/ROOT"
+    owner: tomcat
+    group: tomcat
+    mode: '0755'
+  notify: restart Tomcat    
+    
