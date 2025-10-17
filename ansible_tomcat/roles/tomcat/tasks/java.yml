@@ -32,27 +32,27 @@
     
 
 
-- name: Create setenv.sh to export JAVA_HOME
-  copy:
-    dest: "/u01/Tomcat/java/bin/setenv.sh"
-    content: |
-      export JAVA_HOME=/u01/Tomcat/java
-      export PATH=$JAVA_HOME/bin:$PATH
-    owner: tomcat
-    group: tomcat
-    mode: '0755'
+#- name: Create setenv.sh to export JAVA_HOME
+#  copy:
+#    dest: "/u01/Tomcat/java/bin/setenv.sh"
+#    content: |
+#      export JAVA_HOME=/u01/Tomcat/java
+#      export PATH=$JAVA_HOME/bin:$PATH
+#    owner: tomcat
+#   group: tomcat
+ #   mode: '0755'
 
 
-- name: Set JAVA_HOME and update PATH system-wide
-  become: true
-  copy:
-    dest: /etc/profile.d/java.sh
-    content: |
-      export JAVA_HOME=/u01/Tomcat/java
-      export PATH=$JAVA_HOME/bin:$PATH
-    mode: '0755'
-    owner: root
-    group: root
+#- name: Set JAVA_HOME and update PATH system-wide
+#  become: true
+#  copy:
+#    dest: /etc/profile.d/java.sh
+#    content: |
+#      export JAVA_HOME=/u01/Tomcat/java
+#      export PATH=$JAVA_HOME/bin:$PATH
+#    mode: '0755'
+#    owner: root
+#    group: root
 
 
     
