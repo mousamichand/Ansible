@@ -45,7 +45,7 @@
   shell: chmod +x /u01/Tomcat/Tomcat{{ tomcat_version }}/bin/*.sh
   args:
     executable: /bin/bash
-
+  notify: restart tomcat  
 #- name: Copy conf/ directory from CATALINA_HOME to CATALINA_BASE
 #  copy:
 #    src: "/u01/Tomcat/Tomcat{{ tomcat_version }}/conf/"
