@@ -49,6 +49,7 @@
     group: tomcat
     mode: '0644'
     directory_mode: '0755'
+    remote_src: yes
   notify: restart Tomcat
 
 - name: Copy default ROOT webapp from CATALINA_HOME
@@ -58,5 +59,6 @@
     owner: tomcat
     group: tomcat
     mode: '0755'
+    remote_src: yes
   notify: restart Tomcat    
     
