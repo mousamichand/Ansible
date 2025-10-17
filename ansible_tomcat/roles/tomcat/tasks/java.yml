@@ -13,11 +13,7 @@
     dest: "/u01/Tomcat/{{ tarball_name }}"
     mode: '0644'
     
-- name: Remove Java tarball after extraction
-  file:
-    path: "/u01/Tomcat/{{ tarball_name }}"
-    state: absent
-    
+
 - name: Extract Java archive
   unarchive:
     src: "/u01/Tomcat/{{ tarball_name }}"
@@ -29,7 +25,11 @@
   args:
     creates: /u01/Tomcat/java
 
-
+- name: Remove Java tarball after extraction
+  file:
+    path: "/u01/Tomcat/{{ tarball_name }}"
+    state: absent
+    
 
 
 - name: Create setenv.sh to export JAVA_HOME
