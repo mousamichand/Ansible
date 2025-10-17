@@ -31,7 +31,7 @@
   command: mv "/u01/Tomcat/apache-tomcat-{{tomcat_full_version}}" "/u01/Tomcat/Tomcat{{ tomcat_version }}"
   args:
     creates: "/u01/Tomcat/Tomcat{{ tomcat_version }}"
-  notify: restart tomcat
+ 
   
 - name: Set ownership and permissions on Tomcat folder
   file:
@@ -40,7 +40,12 @@
     recurse: yes
     owner: "{{tomcat_user}}"
     group: "{{tomcat_group}}"
-    mode: "0755" 
+    
+- name: Make all Tomcat .sh scripts executable
+  shell: chmod +x /u01/Tomcat/Tomcat{{ tomcat_version }}/bin/*.sh
+  args:
+    executable: /bin/bash
+
 - name: Copy conf/ directory from CATALINA_HOME to CATALINA_BASE
   copy:
     src: "/u01/Tomcat/Tomcat{{ tomcat_version }}/conf/"
@@ -50,7 +55,7 @@
     mode: '0755'
    
     remote_src: yes
-  notify: restart tomcat
+
 
 - name: Copy default ROOT webapp from CATALINA_HOME
   copy:
