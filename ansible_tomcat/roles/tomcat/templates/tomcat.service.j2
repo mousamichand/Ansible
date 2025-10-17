@@ -8,9 +8,9 @@ User={{ tomcat_user }}
 Group={{ tomcat_group }}
 
 Environment="JAVA_HOME=/u01/Tomcat/java"
-Environment="CATALINA_HOME="/u01/Tomcat/Tomcat{{ tomcat_version }}"
-Environment="CATALINA_BASE="/u01/Tomcat/tomcat-{{ app_name }}"
-Environment="CATALINA_PID="/u01/Tomcat/tomcat-{{ app_name }}/temp/tomcat.pid"
+Environment="CATALINA_HOME=/u01/Tomcat/Tomcat{{ tomcat_version }}"
+Environment="CATALINA_BASE=/u01/Tomcat/tomcat-{{ app_name }}"
+Environment="CATALINA_PID=/u01/Tomcat/tomcat-{{ app_name }}/temp/tomcat.pid"
 
 ExecStart="/u01/Tomcat/Tomcat{{ tomcat_version }}/bin/startup.sh"
 ExecStop="/u01/Tomcat/Tomcat{{ tomcat_version }}/bin/shutdown.sh"
