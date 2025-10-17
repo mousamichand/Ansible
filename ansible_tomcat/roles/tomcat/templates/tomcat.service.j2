@@ -14,8 +14,8 @@ Environment="CATALINA_PID=/u01/Tomcat/tomcat-{{ app_name }}/temp/tomcat.pid"
 #PIDFile =/u01/Tomcat/tomcat-{{ app_name }}/temp/tomcat.pid
 #ExecStart="/u01/Tomcat/Tomcat{{ tomcat_version }}/bin/catalina.sh" start
 #ExecStop="/u01/Tomcat/Tomcat{{ tomcat_version }}/bin/catalina.sh"  stop
-ExecStart="/u01/Tomcat/Tomcat{{ tomcat_version }}/bin/startup.sh" start
-ExecStop="/u01/Tomcat/Tomcat{{ tomcat_version }}/bin/shutdown.sh"  stop
+ExecStart="/u01/Tomcat/Tomcat{{ tomcat_version }}/bin/startup.sh" 
+ExecStop="/u01/Tomcat/Tomcat{{ tomcat_version }}/bin/shutdown.sh"  
 Restart=on-failure
 RestartSec=5
 
