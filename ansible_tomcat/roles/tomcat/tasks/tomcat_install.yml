@@ -55,7 +55,7 @@
 - name: Copy default ROOT webapp from CATALINA_HOME
   copy:
     src: "/u01/Tomcat/Tomcat{{ tomcat_version }}/webapps/ROOT"
-    dest: "/u01/Tomcat/tomcat-{{ app_name }}/webapps/ROOT"
+    dest: "/u01/Tomcat/tomcat-{{ app_name }}/webapps/"
     owner: tomcat
     group: tomcat
     mode: '0755'
