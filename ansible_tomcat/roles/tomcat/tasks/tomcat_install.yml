@@ -46,8 +46,9 @@
   args:
     executable: /bin/bash
  # notify: restart tomcat  
+ 
 - name: Copy conf/ directory from CATALINA_HOME to CATALINA_BASE
-   copy:
+  copy:
     src: "/u01/Tomcat/Tomcat{{ tomcat_version }}/conf/"
     dest: "/u01/Tomcat/tomcat-{{ app_name }}/conf/"
     owner: tomcat
