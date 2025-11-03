@@ -3,7 +3,7 @@
   hosts: windows
   gather_facts: no
   vars:
-    zip_url: "https://10.3423.100/public-archives/download/IIS2019/IIS10_2019.zip"
+    zip_url: "https://10.32.20.128/public-archives/download/IIS2019/IIS10_2019.zip"
     zip_dest_path: "D:\\IIS10_2019.zip"
     extract_dir: "D:\\IIS10"
     scripts_src: "files/iis/"
