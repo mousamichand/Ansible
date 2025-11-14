@@ -22,6 +22,7 @@
     min_jdk_size: 185000000
 
   tasks:
+
     - name: Fail if unsupported OS
       fail:
         msg: "This playbook supports only RHEL 8/9 or Oracle Linux 9"
@@ -38,3 +39,105 @@
           - tar
           - sudo
         state: present
+
+    - name: Ensure weblogic user exists
+      user:
+        name: "{{ weblogic_user }}"
+        shell: /sbin/nologin
+        create_home: yes
+        state: present
+
+    - name: Ensure target directories exist
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ weblogic_user }}"
+        group: "{{ weblogic_user }}"
+        mode: "0755"
+      loop:
+        - "{{ target_dir }}"
+        - "{{ weblogic_home }}"
+        - /u001/wls122156
+
+    - name: Download WebLogic zip if missing
+      get_url:
+        url: "{{ weblogic_url }}"
+        dest: "{{ target_dir }}/{{ weblogic_file }}"
+        owner: "{{ weblogic_user }}"
+        group: "{{ weblogic_user }}"
+        mode: "0644"
+        force: no
+
+    - name: Download JDK tar.gz if missing
+      get_url:
+        url: "{{ jdk_url }}"
+        dest: "{{ target_dir }}/{{ jdk_file }}"
+        owner: "{{ weblogic_user }}"
+        group: "{{ weblogic_user }}"
+        mode: "0644"
+        force: no
+
+    - name: Validate WebLogic zip size
+      stat:
+        path: "{{ target_dir }}/{{ weblogic_file }}"
+      register: wl_stat
+
+    - name: Fail if WebLogic zip is too small
+      fail:
+        msg: "WebLogic zip file too small ({{ wl_stat.stat.size }} bytes)"
+      when: wl_stat.stat.size < min_weblogic_size
+
+    - name: Validate JDK tar.gz size
+      stat:
+        path: "{{ target_dir }}/{{ jdk_file }}"
+      register: jdk_stat
+
+    - name: Fail if JDK tar.gz is too small
+      fail:
+        msg: "JDK tar.gz file too small ({{ jdk_stat.stat.size }} bytes)"
+      when: jdk_stat.stat.size < min_jdk_size
+
+    - name: Unzip WebLogic
+      unarchive:
+        src: "{{ target_dir }}/{{ weblogic_file }}"
+        dest: "{{ target_dir }}"
+        remote_src: yes
+        owner: "{{ weblogic_user }}"
+        group: "{{ weblogic_user }}"
+        mode: "0755"
+
+    - name: Extract JDK tar.gz
+      unarchive:
+        src: "{{ target_dir }}/{{ jdk_file }}"
+        dest: "{{ target_dir }}"
+        remote_src: yes
+        owner: "{{ weblogic_user }}"
+        group: "{{ weblogic_user }}"
+        mode: "0755"
+
+    - name: Download helper script
+      get_url:
+        url: "{{ script_url }}"
+        dest: "{{ target_dir }}/{{ script_file }}"
+        owner: "{{ weblogic_user }}"
+        group: "{{ weblogic_user }}"
+        mode: "0755"
+
+    - name: Override JAVA_HOME in script.sh
+      lineinfile:
+        path: "{{ target_dir }}/{{ script_file }}"
+        regexp: '^JAVA_HOME='
+        line: "JAVA_HOME={{ java_homepath }}"
+
+    - name: Override WEBLOGIC_INSTALLER in script.sh
+      lineinfile:
+        path: "{{ target_dir }}/{{ script_file }}"
+        regexp: '^WEBLOGIC_INSTALLER='
+        line: "WEBLOGIC_INSTALLER={{ weblogic_installer_path }}"
+
+    - name: Run WebLogic installer as weblogic user
+      become: yes
+      become_user: "{{ weblogic_user }}"
+      shell: "bash {{ target_dir }}/{{ script_file }}"
+      args:
+        chdir: "{{ target_dir }}"
