@@ -34,7 +34,7 @@
 
 
      - name: Install required packages
-      package:
+       package:
         name:
           - curl
           - unzip
