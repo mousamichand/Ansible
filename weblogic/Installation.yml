@@ -1,0 +1,143 @@
+---
+- name: Automated WebLogic 12.2 Installer
+  hosts: weblogic_servers
+  become: yes
+  gather_facts: yes
+
+  vars:
+    weblogic_user: weblogic
+    target_dir: /u001/software
+    weblogic_home: /u001/wls122156/Middleware/Oracle_Home
+    weblogic_file: fmw_12.2.1.4.0_wls_Disk1_1of1.zip
+    jdk_file: jdk-8u202-linux-x64.tar.gz
+    script_file: script.sh
+    java_homepath: /u001/software/jdk1.8.0_202
+    weblogic_installer_path: /u001/software/fmw_12.2.1.4.0_wls_lite_generic.jar
+
+    weblogic_url: "https://stage.morpheusdata.com/public-archives/download/Public%20Install%20Files/fmw_12.2.1.4.0_wls_lite_Disk1_1of1.zip"
+    jdk_url: "https://stage.morpheusdata.com/public-archives/download/Public%20Install%20Files/jdk-8u202-linux-x64.tar.gz"
+    script_url: "https://stage.morpheusdata.com/public-archives/download/Public%20Install%20Files/weblogic_script.sh"
+
+    min_weblogic_size: 579000000
+    min_jdk_size: 185000000
+
+  tasks:
+
+    - name: Fail if unsupported OS
+      fail:
+        msg: "This playbook supports only RHEL 8/9 or Oracle Linux 9"
+      when: not (
+        (ansible_distribution == "RedHat" and ansible_distribution_major_version | int >= 8) or
+        (ansible_distribution == "OracleLinux" and ansible_distribution_major_version | int >= 9)
+      )
+
+    - name: Install required packages
+      package:
+        name:
+          - curl
+          - unzip
+          - tar
+          - sudo
+        state: present
+
+    - name: Ensure weblogic user exists
+      user:
+        name: "{{ weblogic_user }}"
+        shell: /sbin/nologin
+        create_home: yes
+        state: present
+
+    - name: Ensure target directories exist
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ weblogic_user }}"
+        group: "{{ weblogic_user }}"
+        mode: "0755"
+      loop:
+        - "{{ target_dir }}"
+        - "{{ weblogic_home }}"
+        - /u001/wls122156
+
+    - name: Download WebLogic zip
+      get_url:
+        url: "{{ weblogic_url }}"
+        dest: "{{ target_dir }}/{{ weblogic_file }}"
+        owner: "{{ weblogic_user }}"
+        group: "{{ weblogic_user }}"
+        mode: "0644"
+      register: weblogic_download
+
+    - name: Download JDK tar.gz
+      get_url:
+        url: "{{ jdk_url }}"
+        dest: "{{ target_dir }}/{{ jdk_file }}"
+        owner: "{{ weblogic_user }}"
+        group: "{{ weblogic_user }}"
+        mode: "0644"
+      register: jdk_download
+
+    - name: Fail if WebLogic zip is too small
+      stat:
+        path: "{{ target_dir }}/{{ weblogic_file }}"
+      register: wl_stat
+
+    - name: Validate WebLogic zip size
+      fail:
+        msg: "WebLogic zip file too small ({{ wl_stat.stat.size }} bytes)"
+      when: wl_stat.stat.size < min_weblogic_size
+
+    - name: Fail if JDK tar.gz is too small
+      stat:
+        path: "{{ target_dir }}/{{ jdk_file }}"
+      register: jdk_stat
+
+    - name: Validate JDK tar.gz size
+      fail:
+        msg: "JDK tar.gz file too small ({{ jdk_stat.stat.size }} bytes)"
+      when: jdk_stat.stat.size < min_jdk_size
+
+    - name: Unzip WebLogic
+      unarchive:
+        src: "{{ target_dir }}/{{ weblogic_file }}"
+        dest: "{{ target_dir }}"
+        remote_src: yes
+        owner: "{{ weblogic_user }}"
+        group: "{{ weblogic_user }}"
+
+    - name: Extract JDK tar.gz
+      unarchive:
+        src: "{{ target_dir }}/{{ jdk_file }}"
+        dest: "{{ target_dir }}"
+        remote_src: yes
+        owner: "{{ weblogic_user }}"
+        group: "{{ weblogic_user }}"
+
+    - name: Download helper script
+      get_url:
+        url: "{{ script_url }}"
+        dest: "{{ target_dir }}/{{ script_file }}"
+        owner: "{{ weblogic_user }}"
+        group: "{{ weblogic_user }}"
+        mode: "0755"
+
+    - name: Override JAVA_HOME in script.sh
+      lineinfile:
+        path: "{{ target_dir }}/{{ script_file }}"
+        regexp: '^JAVA_HOME='
+        line: "JAVA_HOME={{ java_homepath }}"
+        backrefs: yes
+
+    - name: Override WEBLOGIC_INSTALLER in script.sh
+      lineinfile:
+        path: "{{ target_dir }}/{{ script_file }}"
+        regexp: '^WEBLOGIC_INSTALLER='
+        line: "WEBLOGIC_INSTALLER={{ weblogic_installer_path }}"
+        backrefs: yes
+
+    - name: Run WebLogic installer as weblogic user
+      become: yes
+      become_user: "{{ weblogic_user }}"
+      shell: "bash {{ target_dir }}/{{ script_file }}"
+      args:
+        chdir: "{{ target_dir }}"
