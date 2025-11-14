@@ -24,7 +24,7 @@
   tasks:
 
      - name: Fail if unsupported OS
-      fail:
+       fail:
         msg: "This playbook supports only RHEL 8/9 or Oracle Linux 9"
       when: >
         not (
