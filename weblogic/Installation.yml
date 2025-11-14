@@ -23,18 +23,16 @@
 
   tasks:
 
-     - name: Fail if unsupported OS
-       fail:
-       msg: "This playbook supports only RHEL 8/9 or Oracle Linux 9"
-       when:
-         - ansible_distribution == "RedHat"
-         - ansible_distribution_major_version | int < 8
-       ignore_errors: no
+    - name: Fail if unsupported OS
+      fail:
+        msg: "This playbook supports only RHEL 8/9 or Oracle Linux 9"
+      when:
+        - ansible_distribution == "RedHat"
+        - ansible_distribution_major_version | int < 8
+      ignore_errors: no
 
-
-
-     - name: Install required packages
-       package:
+    - name: Install required packages
+      package:
         name:
           - curl
           - unzip
@@ -42,12 +40,12 @@
           - sudo
         state: present
 
-     - name: Ensure weblogic user exists
-       user:
-         name: "{{ weblogic_user }}"
-         shell: /sbin/nologin
-         create_home: yes
-      state: present
+    - name: Ensure weblogic user exists
+      user:
+        name: "{{ weblogic_user }}"
+        shell: /sbin/nologin
+        create_home: yes
+        state: present
 
     - name: Ensure target directories exist
       file:
