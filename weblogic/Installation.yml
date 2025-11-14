@@ -47,7 +47,7 @@
          name: "{{ weblogic_user }}"
          shell: /sbin/nologin
          create_home: yes
-        state: present
+      state: present
 
     - name: Ensure target directories exist
       file:
