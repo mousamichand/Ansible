@@ -25,11 +25,12 @@
 
      - name: Fail if unsupported OS
        fail:
-        msg: "This playbook supports only RHEL 8/9 or Oracle Linux 9"
-      when: not (
-        (ansible_distribution == "RedHat" and (ansible_distribution_major_version | int) >= 8) or
-        (ansible_distribution == "OracleLinux" and (ansible_distribution_major_version | int) >= 9)
-      )
+       msg: "This playbook supports only RHEL 8/9 or Oracle Linux 9"
+       when:
+         - ansible_distribution == "RedHat"
+         - ansible_distribution_major_version | int < 8
+       ignore_errors: no
+
 
 
     - name: Install required packages
