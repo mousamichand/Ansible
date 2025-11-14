@@ -1,6 +1,6 @@
 ---
 - name: Automated WebLogic 12.2 Installer
-  hosts: weblogic_servers
+  hosts: all
   become: yes
   gather_facts: yes
 
