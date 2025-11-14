@@ -59,40 +59,40 @@
         - "{{ weblogic_home }}"
         - /u001/wls122156
 
-    - name: Download WebLogic zip
+    - name: Download WebLogic zip if missing
       get_url:
         url: "{{ weblogic_url }}"
         dest: "{{ target_dir }}/{{ weblogic_file }}"
         owner: "{{ weblogic_user }}"
         group: "{{ weblogic_user }}"
         mode: "0644"
-      register: weblogic_download
+        force: no
 
-    - name: Download JDK tar.gz
+    - name: Download JDK tar.gz if missing
       get_url:
         url: "{{ jdk_url }}"
         dest: "{{ target_dir }}/{{ jdk_file }}"
         owner: "{{ weblogic_user }}"
         group: "{{ weblogic_user }}"
         mode: "0644"
-      register: jdk_download
+        force: no
 
-    - name: Fail if WebLogic zip is too small
+    - name: Validate WebLogic zip size
       stat:
         path: "{{ target_dir }}/{{ weblogic_file }}"
       register: wl_stat
 
-    - name: Validate WebLogic zip size
+    - name: Fail if WebLogic zip is too small
       fail:
         msg: "WebLogic zip file too small ({{ wl_stat.stat.size }} bytes)"
       when: wl_stat.stat.size < min_weblogic_size
 
-    - name: Fail if JDK tar.gz is too small
+    - name: Validate JDK tar.gz size
       stat:
         path: "{{ target_dir }}/{{ jdk_file }}"
       register: jdk_stat
 
-    - name: Validate JDK tar.gz size
+    - name: Fail if JDK tar.gz is too small
       fail:
         msg: "JDK tar.gz file too small ({{ jdk_stat.stat.size }} bytes)"
       when: jdk_stat.stat.size < min_jdk_size
@@ -104,6 +104,7 @@
         remote_src: yes
         owner: "{{ weblogic_user }}"
         group: "{{ weblogic_user }}"
+        mode: "0755"
 
     - name: Extract JDK tar.gz
       unarchive:
@@ -112,6 +113,7 @@
         remote_src: yes
         owner: "{{ weblogic_user }}"
         group: "{{ weblogic_user }}"
+        mode: "0755"
 
     - name: Download helper script
       get_url:
@@ -126,14 +128,12 @@
         path: "{{ target_dir }}/{{ script_file }}"
         regexp: '^JAVA_HOME='
         line: "JAVA_HOME={{ java_homepath }}"
-        backrefs: yes
 
     - name: Override WEBLOGIC_INSTALLER in script.sh
       lineinfile:
         path: "{{ target_dir }}/{{ script_file }}"
         regexp: '^WEBLOGIC_INSTALLER='
         line: "WEBLOGIC_INSTALLER={{ weblogic_installer_path }}"
-        backrefs: yes
 
     - name: Run WebLogic installer as weblogic user
       become: yes
