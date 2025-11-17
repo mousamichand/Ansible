@@ -50,7 +50,7 @@
 
     - name: Check WebLogic version
       ansible.builtin.shell: |
-        "{{ weblogic_home }}/wlserver/server/bin/version.sh | grep 'WebLogic Server'"
+        {{ weblogic_home }}/wlserver/server/bin/version.sh | grep 'WebLogic Server'
       register: weblogic_version
       when: weblogic_bin.stat.exists
       changed_when: false
