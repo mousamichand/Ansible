@@ -1,13 +1,14 @@
 ---
-- name: Check WebLogic Setup, Version, and OS
+- name: Check WebLogic Setup, Version, OS, and JDK
   hosts: weblogic_servers
   become: yes
   vars:
     weblogic_user: weblogic
     weblogic_home: /u001/wls122156/Middleware/Oracle_Home
-    expected_os: "OracleLinux"        # Expected OS name
-    expected_os_version: "8"          # Expected OS major version
-    expected_weblogic_version: "12.2.1.4.0"  # Expected WebLogic version
+    expected_os: "OracleLinux"             # Expected OS name
+    expected_os_version: "9"               # Expected OS major version
+    expected_weblogic_version: "12.1.2.4.0" # Expected WebLogic version
+    expected_jdk_version: "1.8.0"          # Expected JDK version
 
   tasks:
 
@@ -74,4 +75,18 @@
             OS check PASSED: {{ ansible_facts['ansible_distribution'] }} {{ ansible_facts['ansible_distribution_major_version'] }}
           {% else %}
             OS check FAILED: Found {{ ansible_facts['ansible_distribution'] }} {{ ansible_facts['ansible_distribution_major_version'] }}, expected {{ expected_os }} {{ expected_os_version }}
+          {% endif %}
+
+    - name: Check installed JDK version
+      ansible.builtin.shell: java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}'
+      register: jdk_version
+      changed_when: false
+
+    - name: Compare JDK version with expected
+      ansible.builtin.debug:
+        msg: >
+          {% if expected_jdk_version in jdk_version.stdout %}
+            JDK version check PASSED: Found {{ jdk_version.stdout }}
+          {% else %}
+            JDK version check FAILED: Found {{ jdk_version.stdout }}, expected {{ expected_jdk_version }}
           {% endif %}
