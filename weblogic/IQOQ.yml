@@ -1,5 +1,5 @@
 ---
-- name: Check WebLogic Setup
+- name: Check WebLogic Setup and Version
   hosts: weblogic_servers
   become: yes
   vars:
@@ -37,3 +37,15 @@
           {% else %}
             WebLogic binaries NOT found in {{ weblogic_home }}/wlserver/server/bin
           {% endif %}
+
+    - name: Check WebLogic version
+      ansible.builtin.shell: |
+        "{{ weblogic_home }}/wlserver/server/bin/version.sh"
+      register: weblogic_version
+      when: weblogic_bin.stat.exists
+      changed_when: false
+
+    - name: Display WebLogic version
+      ansible.builtin.debug:
+        msg: "{{ weblogic_version.stdout_lines }}"
+      when: weblogic_bin.stat.exists
