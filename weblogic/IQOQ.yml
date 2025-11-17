@@ -75,13 +75,13 @@
     - name: Check if OS matches expected
       ansible.builtin.debug:
         msg: >
-          {% if ansible_facts['ansible_distribution'] == expected_os
-                and ansible_facts['ansible_distribution_major_version'] == expected_os_version %}
-            OS check PASSED: {{ ansible_facts['ansible_distribution'] }} {{ ansible_facts['ansible_distribution_major_version'] }}
-          {% else %}
-            OS check FAILED: Found {{ ansible_facts['ansible_distribution'] }} {{ ansible_facts['ansible_distribution_major_version'] }},
-            expected {{ expected_os }} {{ expected_os_version }}
-          {% endif %}
+         {% set dist = ansible_facts.get('distribution', ansible_distribution) %}
+         {% set dist_ver = ansible_facts.get('distribution_major_version', ansible_distribution_major_version) %}
+         {% if dist == expected_os and dist_ver == expected_os_version %}
+         OS check PASSED: {{ dist }} {{ dist_ver }}
+         {% else %}
+         OS check FAILED: Found {{ dist }} {{ dist_ver }}, expected {{ expected_os }} {{ expected_os_version }}
+         {% endif %}
 
     - name: Check installed JDK version
       ansible.builtin.shell: java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}'
