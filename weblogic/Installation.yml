@@ -1,6 +1,6 @@
 ---
 - name: Check WebLogic Setup, Version, and OS
-  hosts: weblogic_servers
+  hosts: all
   become: yes
   vars:
     weblogic_user: weblogic
