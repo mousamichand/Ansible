@@ -1,10 +1,13 @@
 ---
-- name: Check WebLogic Setup and Version
+- name: Check WebLogic Setup, Version, and OS
   hosts: weblogic_servers
-  become: all
+  become: yes
   vars:
     weblogic_user: weblogic
     weblogic_home: /u001/wls122156/Middleware/Oracle_Home
+    expected_os: "OracleLinux"        # Expected OS name
+    expected_os_version: "8"          # Expected OS major version
+    expected_weblogic_version: "14.1.1.0.0"  # Expected WebLogic version
 
   tasks:
 
@@ -40,7 +43,7 @@
 
     - name: Check WebLogic version
       ansible.builtin.shell: |
-        "{{ weblogic_home }}/wlserver/server/bin/version.sh"
+        "{{ weblogic_home }}/wlserver/server/bin/version.sh | grep 'WebLogic Server'"
       register: weblogic_version
       when: weblogic_bin.stat.exists
       changed_when: false
@@ -49,3 +52,26 @@
       ansible.builtin.debug:
         msg: "{{ weblogic_version.stdout_lines }}"
       when: weblogic_bin.stat.exists
+
+    - name: Compare WebLogic version with expected
+      ansible.builtin.debug:
+        msg: >
+          {% if expected_weblogic_version in weblogic_version.stdout %}
+            WebLogic version check PASSED: Found {{ weblogic_version.stdout }}
+          {% else %}
+            WebLogic version check FAILED: Found {{ weblogic_version.stdout }}, expected {{ expected_weblogic_version }}
+          {% endif %}
+      when: weblogic_bin.stat.exists
+
+    - name: Gather OS facts
+      ansible.builtin.setup:
+        filter: ansible_distribution*
+
+    - name: Check if OS matches expected
+      ansible.builtin.debug:
+        msg: >
+          {% if ansible_facts['ansible_distribution'] == expected_os and ansible_facts['ansible_distribution_major_version'] == expected_os_version %}
+            OS check PASSED: {{ ansible_facts['ansible_distribution'] }} {{ ansible_facts['ansible_distribution_major_version'] }}
+          {% else %}
+            OS check FAILED: Found {{ ansible_facts['ansible_distribution'] }} {{ ansible_facts['ansible_distribution_major_version'] }}, expected {{ expected_os }} {{ expected_os_version }}
+          {% endif %}
