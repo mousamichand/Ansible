@@ -25,7 +25,7 @@
          WebLogic user "{{ weblogic_user }}" exists.
        {% else %}
          WebLogic user "{{ weblogic_user }}" does NOT exist.
-        {% endif %}}
+        {% endif %}
 
     - name: Check if WebLogic binaries directory exists
       ansible.builtin.stat:
