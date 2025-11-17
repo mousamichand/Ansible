@@ -1,7 +1,7 @@
 ---
 - name: Check WebLogic Setup and Version
   hosts: weblogic_servers
-  become: yes
+  become: all
   vars:
     weblogic_user: weblogic
     weblogic_home: /u01/app/oracle/middleware
