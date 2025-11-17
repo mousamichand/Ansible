@@ -7,7 +7,7 @@
     weblogic_home: /u001/wls122156/Middleware/Oracle_Home
     expected_os: "OracleLinux"        # Expected OS name
     expected_os_version: "8"          # Expected OS major version
-    expected_weblogic_version: "14.1.1.0.0"  # Expected WebLogic version
+    expected_weblogic_version: "12.2.1.4.0"  # Expected WebLogic version
 
   tasks:
 
