@@ -60,6 +60,7 @@
         remote_src: yes
         owner: "{{ WLS_USER }}"
         group: "{{ WLS_USER }}"
+        extra_opts: [ "-o" ]
 
     - name: Extract JDK tar.gz
       ansible.builtin.unarchive:
@@ -68,6 +69,7 @@
         remote_src: yes
         owner: "{{ WLS_USER }}"
         group: "{{ WLS_USER }}"
+        extra_opts: [ "-o" ]
 
     - name: Download helper installer script
       ansible.builtin.get_url:
