@@ -23,7 +23,7 @@
        msg: >
         {% if weblogic_user_check is defined and not weblogic_user_check.failed %}
          WebLogic user "{{ weblogic_user }}" exists.
-       {% else %}
+        {% else %}
          WebLogic user "{{ weblogic_user }}" does NOT exist.
         {% endif %}
 
