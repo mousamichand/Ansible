@@ -1,0 +1,39 @@
+---
+- name: Check WebLogic Setup
+  hosts: weblogic_servers
+  become: yes
+  vars:
+    weblogic_user: weblogic
+    weblogic_home: /u01/app/oracle/middleware
+
+  tasks:
+
+    - name: Check if WebLogic user exists
+      ansible.builtin.getent:
+        database: passwd
+        key: "{{ weblogic_user }}"
+      register: weblogic_user_check
+      ignore_errors: yes
+
+    - name: Report WebLogic user existence
+      ansible.builtin.debug:
+        msg: >
+          {% if weblogic_user_check.found %}
+            WebLogic user "{{ weblogic_user }}" exists.
+          {% else %}
+            WebLogic user "{{ weblogic_user }}" does NOT exist.
+          {% endif %}
+
+    - name: Check if WebLogic binaries directory exists
+      ansible.builtin.stat:
+        path: "{{ weblogic_home }}/wlserver/server/bin"
+      register: weblogic_bin
+
+    - name: Report WebLogic binaries existence
+      ansible.builtin.debug:
+        msg: >
+          {% if weblogic_bin.stat.exists %}
+            WebLogic binaries are installed in {{ weblogic_home }}/wlserver/server/bin
+          {% else %}
+            WebLogic binaries NOT found in {{ weblogic_home }}/wlserver/server/bin
+          {% endif %}
