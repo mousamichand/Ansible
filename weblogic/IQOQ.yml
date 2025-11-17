@@ -2,15 +2,15 @@
 - name: Check WebLogic Setup, Version, OS, and JDK
   hosts: all
   become: yes
-  gather_facts: yes
+  gather_facts: yes   # This already loads ansible_distribution and OS facts
 
   vars:
     weblogic_user: weblogic
     weblogic_home: /u001/wls122156/Middleware/Oracle_Home
-    expected_os: "OracleLinux"             # Expected OS name
-    expected_os_version: "9"               # Expected OS major version
-    expected_weblogic_version: "12.1.2.4.0" # Expected WebLogic version
-    expected_jdk_version: "1.8.0"          # Expected JDK version
+    expected_os: "OracleLinux"
+    expected_os_version: "9"
+    expected_weblogic_version: "12.1.2.4.0"
+    expected_jdk_version: "1.8.0"
 
   tasks:
 
@@ -25,7 +25,7 @@
     - name: Report WebLogic user existence
       ansible.builtin.debug:
         msg: >
-          {% if  weblogic_user_check is defined and weblogic_user_check|length > 0 %}
+          {% if weblogic_user_check is defined and weblogic_user_check|length > 0 %}
             WebLogic user "{{ weblogic_user }}" exists.
           {% else %}
             WebLogic user "{{ weblogic_user }}" does NOT exist.
@@ -47,40 +47,40 @@
 
     - name: Check WebLogic version using WLST inline
       ansible.builtin.shell: |
-       {{ weblogic_home }}/oracle_common/common/bin/wlst.sh -skipWLSModuleScanning << EOF
-       print 'WebLogic version:'
-       print weblogic.version.getWLVersion()
-       exit()
-       EOF
+        {{ weblogic_home }}/oracle_common/common/bin/wlst.sh -skipWLSModuleScanning << EOF
+        print 'WebLogic version:'
+        print weblogic.version.getWLVersion()
+        exit()
+        EOF
       register: weblogic_version
       ignore_errors: yes
       changed_when: false
+      when: weblogic_bin.stat.exists
 
     - name: Display WebLogic version
       ansible.builtin.debug:
-       msg: "{{ weblogic_version.stdout_lines }}"
+        msg: "{{ weblogic_version.stdout_lines }}"
+      when: weblogic_bin.stat.exists
 
     - name: Compare WebLogic version with expected
       ansible.builtin.debug:
         msg: >
-          {% if expected_weblogic_version in weblogic_version.stdout %}
+          {% if weblogic_version.stdout is defined and expected_weblogic_version in weblogic_version.stdout %}
             WebLogic version check PASSED: Found {{ weblogic_version.stdout }}
           {% else %}
-            WebLogic version check FAILED: Found {{ weblogic_version.stdout }}, expected {{ expected_weblogic_version }}
+            WebLogic version check FAILED: Found {{ weblogic_version.stdout | default('UNKNOWN') }}, expected {{ expected_weblogic_version }}
           {% endif %}
       when: weblogic_bin.stat.exists
-
-    - name: Gather OS facts
-      ansible.builtin.setup:
-        filter: ansible_distribution*
 
     - name: Check if OS matches expected
       ansible.builtin.debug:
         msg: >
-          {% if ansible_facts['ansible_distribution'] == expected_os and ansible_facts['ansible_distribution_major_version'] == expected_os_version %}
+          {% if ansible_facts['ansible_distribution'] == expected_os
+                and ansible_facts['ansible_distribution_major_version'] == expected_os_version %}
             OS check PASSED: {{ ansible_facts['ansible_distribution'] }} {{ ansible_facts['ansible_distribution_major_version'] }}
           {% else %}
-            OS check FAILED: Found {{ ansible_facts['ansible_distribution'] }} {{ ansible_facts['ansible_distribution_major_version'] }}, expected {{ expected_os }} {{ expected_os_version }}
+            OS check FAILED: Found {{ ansible_facts['ansible_distribution'] }} {{ ansible_facts['ansible_distribution_major_version'] }},
+            expected {{ expected_os }} {{ expected_os_version }}
           {% endif %}
 
     - name: Check installed JDK version
