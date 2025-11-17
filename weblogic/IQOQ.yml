@@ -56,7 +56,7 @@
 
     - name: Display WebLogic version
       ansible.builtin.debug:
-      msg: "{{ weblogic_version.stdout_lines }}"
+       msg: "{{ weblogic_version.stdout_lines }}"
 
     - name: Compare WebLogic version with expected
       ansible.builtin.debug:
