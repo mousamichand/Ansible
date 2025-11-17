@@ -4,7 +4,7 @@
   become: all
   vars:
     weblogic_user: weblogic
-    weblogic_home: /u01/app/oracle/middleware
+    weblogic_home: /u001/wls122156/Middleware/Oracle_Home
 
   tasks:
 
