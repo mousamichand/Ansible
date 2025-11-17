@@ -18,11 +18,12 @@
         key: "{{ weblogic_user }}"
       register: weblogic_user_check
       ignore_errors: yes
+      changed_when: false
 
     - name: Report WebLogic user existence
       ansible.builtin.debug:
         msg: >
-          {% if weblogic_user_check.entries%}
+          {% if weblogic_user_check.rc == 0 %}
             WebLogic user "{{ weblogic_user }}" exists.
           {% else %}
             WebLogic user "{{ weblogic_user }}" does NOT exist.
