@@ -1,77 +1,97 @@
 ---
-- name: Check WebLogic Setup, Version, and OS
+- name: Automated WebLogic 12.2 Installer Playbook
   hosts: all
   become: yes
   vars:
-    weblogic_user: weblogic
-    weblogic_home: /u001/wls122156/Middleware/Oracle_Home
-    expected_os: "OracleLinux"        # Expected OS name
-    expected_os_version: "8"          # Expected OS major version
-    expected_weblogic_version: "14.1.1.0.0"  # Expected WebLogic version
+    WLS_USER: weblogic
+    TARGET_DIR: /u001/software
+    WEBLOGIC_HOME: /u001/wls122156/Middleware/Oracle_Home
+    WEBLOGIC_URL: "https://stage.morpheusdata.com/public-archives/download/Public%20Install%20Files/fmw_12.2.1.4.0_wls_lite_Disk1_1of1.zip"
+    JDK_URL: "https://stage.morpheusdata.com/public-archives/download/Public%20Install%20Files/jdk-8u202-linux-x64.tar.gz"
+    SCRIPT_URL: "https://stage.morpheusdata.com/public-archives/download/Public%20Install%20Files/weblogic_script.sh"
+    WEBLOGIC_FILE: fmw_12.2.1.4.0_wls_Disk1_1of1.zip
+    JDK_FILE: jdk-8u202-linux-x64.tar.gz
+    SCRIPT_FILE: "{{ TARGET_DIR }}/script.sh"
+    JAVA_HOMEPATH: "{{ TARGET_DIR }}/jdk1.8.0_202"
+    WEBLOGIC_INSTALLER_PATH: "{{ TARGET_DIR }}/fmw_12.2.1.4.0_wls_lite_generic.jar"
 
   tasks:
 
-    - name: Check if WebLogic user exists
-      ansible.builtin.getent:
-        database: passwd
-        key: "{{ weblogic_user }}"
-      register: weblogic_user_check
-      ignore_errors: yes
+    - name: Ensure WebLogic user exists
+      ansible.builtin.user:
+        name: "{{ WLS_USER }}"
+        shell: /sbin/nologin
+        create_home: yes
 
-    - name: Report WebLogic user existence
-      ansible.builtin.debug:
-       msg: >
-        {% if weblogic_user_check is defined and not weblogic_user_check.failed %}
-         WebLogic user "{{ weblogic_user }}" exists.
-        {% else %}
-         WebLogic user "{{ weblogic_user }}" does NOT exist.
-        {% endif %}
+    - name: Ensure directories exist with correct permissions
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ WLS_USER }}"
+        group: "{{ WLS_USER }}"
+        mode: '0755'
+        recurse: yes
+      loop:
+        - "{{ WEBLOGIC_HOME }}"
+        - "/u001/wls122156"
+        - "{{ TARGET_DIR }}"
+        - "/u001"
 
-    - name: Check if WebLogic binaries directory exists
-      ansible.builtin.stat:
-        path: "{{ weblogic_home }}/wlserver/server/bin"
-      register: weblogic_bin
+    - name: Download WebLogic zip
+      ansible.builtin.get_url:
+        url: "{{ WEBLOGIC_URL }}"
+        dest: "{{ TARGET_DIR }}/{{ WEBLOGIC_FILE }}"
+        owner: "{{ WLS_USER }}"
+        group: "{{ WLS_USER }}"
+        mode: '0644'
 
-    - name: Report WebLogic binaries existence
-      ansible.builtin.debug:
-        msg: >
-          {% if weblogic_bin.stat.exists %}
-            WebLogic binaries are installed in {{ weblogic_home }}/wlserver/server/bin
-          {% else %}
-            WebLogic binaries NOT found in {{ weblogic_home }}/wlserver/server/bin
-          {% endif %}
+    - name: Download JDK tar.gz
+      ansible.builtin.get_url:
+        url: "{{ JDK_URL }}"
+        dest: "{{ TARGET_DIR }}/{{ JDK_FILE }}"
+        owner: "{{ WLS_USER }}"
+        group: "{{ WLS_USER }}"
+        mode: '0644'
 
-    - name: Check WebLogic version
-      ansible.builtin.shell: |
-        "{{ weblogic_home }}/wlserver/server/bin/version.sh | grep 'WebLogic Server'"
-      register: weblogic_version
-      when: weblogic_bin.stat.exists
-      changed_when: false
+    - name: Extract WebLogic zip
+      ansible.builtin.unarchive:
+        src: "{{ TARGET_DIR }}/{{ WEBLOGIC_FILE }}"
+        dest: "{{ TARGET_DIR }}"
+        remote_src: yes
+        owner: "{{ WLS_USER }}"
+        group: "{{ WLS_USER }}"
 
-    - name: Display WebLogic version
-      ansible.builtin.debug:
-        msg: "{{ weblogic_version.stdout_lines }}"
-      when: weblogic_bin.stat.exists
+    - name: Extract JDK tar.gz
+      ansible.builtin.unarchive:
+        src: "{{ TARGET_DIR }}/{{ JDK_FILE }}"
+        dest: "{{ TARGET_DIR }}"
+        remote_src: yes
+        owner: "{{ WLS_USER }}"
+        group: "{{ WLS_USER }}"
 
-    - name: Compare WebLogic version with expected
-      ansible.builtin.debug:
-        msg: >
-          {% if expected_weblogic_version in weblogic_version.stdout %}
-            WebLogic version check PASSED: Found {{ weblogic_version.stdout }}
-          {% else %}
-            WebLogic version check FAILED: Found {{ weblogic_version.stdout }}, expected {{ expected_weblogic_version }}
-          {% endif %}
-      when: weblogic_bin.stat.exists
+    - name: Download helper installer script
+      ansible.builtin.get_url:
+        url: "{{ SCRIPT_URL }}"
+        dest: "{{ SCRIPT_FILE }}"
+        owner: "{{ WLS_USER }}"
+        group: "{{ WLS_USER }}"
+        mode: '0755'
 
-    - name: Gather OS facts
-      ansible.builtin.setup:
-        filter: ansible_distribution*
+    - name: Override JAVA_HOME and WEBLOGIC_INSTALLER in script
+      ansible.builtin.replace:
+        path: "{{ SCRIPT_FILE }}"
+        regexp: '^JAVA_HOME=.*'
+        replace: "JAVA_HOME=\"{{ JAVA_HOMEPATH }}\""
 
-    - name: Check if OS matches expected
-      ansible.builtin.debug:
-        msg: >
-          {% if ansible_facts['ansible_distribution'] == expected_os and ansible_facts['ansible_distribution_major_version'] == expected_os_version %}
-            OS check PASSED: {{ ansible_facts['ansible_distribution'] }} {{ ansible_facts['ansible_distribution_major_version'] }}
-          {% else %}
-            OS check FAILED: Found {{ ansible_facts['ansible_distribution'] }} {{ ansible_facts['ansible_distribution_major_version'] }}, expected {{ expected_os }} {{ expected_os_version }}
-          {% endif %}
+    - name: Override WEBLOGIC_INSTALLER in script
+      ansible.builtin.replace:
+        path: "{{ SCRIPT_FILE }}"
+        regexp: '^WEBLOGIC_INSTALLER=.*'
+        replace: "WEBLOGIC_INSTALLER=\"{{ WEBLOGIC_INSTALLER_PATH }}\""
+
+    - name: Run WebLogic installer as weblogic user
+      ansible.builtin.command:
+        cmd: "bash {{ SCRIPT_FILE }}"
+        chdir: "{{ TARGET_DIR }}"
+        creates: "{{ WEBLOGIC_HOME }}/wlserver"
+      become_user: "{{ WLS_USER }}"
