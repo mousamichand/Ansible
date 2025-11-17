@@ -43,22 +43,20 @@
             WebLogic binaries NOT found in {{ weblogic_home }}/wlserver/server/bin
           {% endif %}
 
-    - name: Check if WebLogic version.sh exists
-      ansible.builtin.stat:
-       path: "{{ weblogic_home }}/wlserver/server/bin/version.sh"
-      register: version_sh
-
-    - name: Check WebLogic version
-      ansible.builtin.shell: |
-        {{ weblogic_home }}/wlserver/server/bin/version.sh | grep 'WebLogic Server'
-      register: weblogic_version
-      when: weblogic_bin.stat.exists
-      changed_when: false
+   - name: Check WebLogic version using WLST inline
+     ansible.builtin.shell: |
+       {{ weblogic_home }}/oracle_common/common/bin/wlst.sh -skipWLSModuleScanning << EOF
+       print 'WebLogic version:'
+       print weblogic.version.getWLVersion()
+       exit()
+       EOF
+     register: weblogic_version
+     ignore_errors: yes
+     changed_when: false
 
     - name: Display WebLogic version
       ansible.builtin.debug:
-        msg: "{{ weblogic_version.stdout_lines }}"
-      when: weblogic_bin.stat.exists
+      msg: "{{ weblogic_version.stdout_lines }}"
 
     - name: Compare WebLogic version with expected
       ansible.builtin.debug:
