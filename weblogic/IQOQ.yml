@@ -11,7 +11,7 @@
     expected_os_version: "9"
     expected_weblogic_version: "12.1.2.4.0"
     expected_jdk_version: "1.8.0"
-    JAVA_HOME: "/u001/software/jDk1.8.0_202"
+    JAVA_HOME: "/u001/software/jdk1.8.0_202"
 
   tasks:
 
