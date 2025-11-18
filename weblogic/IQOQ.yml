@@ -84,9 +84,13 @@
          {% endif %}
 
     - name: Check installed JDK version
-      ansible.builtin.shell: java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}'
+      ansible.builtin.shell: >
+         {{ JAVA_HOME }}/bin/java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}'
+      environment:
+       JAVA_HOME: "/u001/software/jDk1.8_202"
       register: jdk_version
       changed_when: false
+
 
     - name: Compare JDK version with expected
       ansible.builtin.debug:
