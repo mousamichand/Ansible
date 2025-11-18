@@ -2,6 +2,7 @@
 - name: Automated WebLogic 12.2 Installer Playbook
   hosts: all
   become: yes
+
   vars:
     WLS_USER: weblogic
     TARGET_DIR: /u001/software
@@ -9,6 +10,7 @@
     WEBLOGIC_URL: "https://stage.morpheusdata.com/public-archives/download/Public%20Install%20Files/fmw_12.2.1.4.0_wls_lite_Disk1_1of1.zip"
     JDK_URL: "https://stage.morpheusdata.com/public-archives/download/Public%20Install%20Files/jdk-8u202-linux-x64.tar.gz"
     SCRIPT_URL: "https://stage.morpheusdata.com/public-archives/download/Public%20Install%20Files/weblogic_script.sh"
+
     WEBLOGIC_FILE: fmw_12.2.1.4.0_wls_Disk1_1of1.zip
     JDK_FILE: jdk-8u202-linux-x64.tar.gz
     SCRIPT_FILE: "{{ TARGET_DIR }}/script.sh"
@@ -17,33 +19,38 @@
 
   tasks:
 
-    - name: Ensure WebLogic user exists
+    - name: Ensure unzip and tar utilities are installed
+      ansible.builtin.package:
+        name:
+          - unzip
+          - tar
+        state: present
+
+    - name: Create WebLogic user
       ansible.builtin.user:
         name: "{{ WLS_USER }}"
         shell: /sbin/nologin
         create_home: yes
 
-    - name: Ensure directories exist with correct permissions
+    - name: Ensure required directories exist
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
         owner: "{{ WLS_USER }}"
         group: "{{ WLS_USER }}"
-        mode: '0755'
-        recurse: yes
+        mode: "0755"
       loop:
-        - "{{ WEBLOGIC_HOME }}"
-        - "/u001/wls122156"
         - "{{ TARGET_DIR }}"
-        - "/u001"
+        - "{{ WEBLOGIC_HOME }}"
+        - /u001/wls122156
+        - /u001
 
-    - name: Download WebLogic zip
+    - name: Download WebLogic installation zip
       ansible.builtin.get_url:
         url: "{{ WEBLOGIC_URL }}"
         dest: "{{ TARGET_DIR }}/{{ WEBLOGIC_FILE }}"
         owner: "{{ WLS_USER }}"
         group: "{{ WLS_USER }}"
-        mode: '0644'
 
     - name: Download JDK tar.gz
       ansible.builtin.get_url:
@@ -51,49 +58,45 @@
         dest: "{{ TARGET_DIR }}/{{ JDK_FILE }}"
         owner: "{{ WLS_USER }}"
         group: "{{ WLS_USER }}"
-        mode: '0644'
 
-    - name: Extract WebLogic zip
-      ansible.builtin.unarchive:
-        src: "{{ TARGET_DIR }}/{{ WEBLOGIC_FILE }}"
-        dest: "{{ TARGET_DIR }}"
-        remote_src: yes
-        owner: "{{ WLS_USER }}"
-        group: "{{ WLS_USER }}"
-        extra_opts: [ "-o" ]
+    - name: Extract WebLogic zip (safe, low memory)
+      ansible.builtin.command:
+        cmd: "unzip -o {{ TARGET_DIR }}/{{ WEBLOGIC_FILE }} -d {{ TARGET_DIR }}"
+      become_user: "{{ WLS_USER }}"
+      args:
+        creates: "{{ TARGET_DIR }}/fmw_12.2.1.4.0_wls_lite_generic.jar"
 
-    - name: Extract JDK tar.gz
-      ansible.builtin.unarchive:
-        src: "{{ TARGET_DIR }}/{{ JDK_FILE }}"
-        dest: "{{ TARGET_DIR }}"
-        remote_src: yes
-        owner: "{{ WLS_USER }}"
-        group: "{{ WLS_USER }}"
-        extra_opts: [ "-o" ]
+    - name: Extract JDK (safe, low memory)
+      ansible.builtin.command:
+        cmd: "tar -xzf {{ TARGET_DIR }}/{{ JDK_FILE }} -C {{ TARGET_DIR }}"
+      become_user: "{{ WLS_USER }}"
+      args:
+        creates: "{{ JAVA_HOMEPATH }}"
 
     - name: Download helper installer script
       ansible.builtin.get_url:
         url: "{{ SCRIPT_URL }}"
         dest: "{{ SCRIPT_FILE }}"
+        mode: "0755"
         owner: "{{ WLS_USER }}"
         group: "{{ WLS_USER }}"
-        mode: '0755'
 
-    - name: Override JAVA_HOME and WEBLOGIC_INSTALLER in script
+    - name: Update JAVA_HOME in script
       ansible.builtin.replace:
         path: "{{ SCRIPT_FILE }}"
         regexp: '^JAVA_HOME=.*'
-        replace: "JAVA_HOME=\"{{ JAVA_HOMEPATH }}\""
+        replace: 'JAVA_HOME="{{ JAVA_HOMEPATH }}"'
 
-    - name: Override WEBLOGIC_INSTALLER in script
+    - name: Update WEBLOGIC_INSTALLER in script
       ansible.builtin.replace:
         path: "{{ SCRIPT_FILE }}"
         regexp: '^WEBLOGIC_INSTALLER=.*'
-        replace: "WEBLOGIC_INSTALLER=\"{{ WEBLOGIC_INSTALLER_PATH }}\""
+        replace: 'WEBLOGIC_INSTALLER="{{ WEBLOGIC_INSTALLER_PATH }}"'
 
-    - name: Run WebLogic installer as weblogic user
+    - name: Run WebLogic installer
       ansible.builtin.command:
         cmd: "bash {{ SCRIPT_FILE }}"
+      become_user: "{{ WLS_USER }}"
+      args:
         chdir: "{{ TARGET_DIR }}"
         creates: "{{ WEBLOGIC_HOME }}/wlserver"
-      become_user: "{{ WLS_USER }}"
