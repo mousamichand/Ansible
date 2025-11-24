@@ -8,7 +8,7 @@
     TARGET_DIR: /u001/software
     WEBLOGIC_HOME: /u001/wls122156/Middleware/Oracle_Home
     WEBLOGIC_URL: "https://azmphqaedge.astrazeneca.net/public-archives/download/Artifact/fmw_12.2.1.4.0_wls_lite_Disk1_1of1.zip"
-    JDK_URL: "https://azmphqaedge.astrazeneca.net/public-archives/download/Artifact/jdk-8u202-linux-x64.tar.gz"                                                                                                                                           "
+    JDK_URL: "https://azmphqaedge.astrazeneca.net/public-archives/download/Artifact/jdk-8u202-linux-x64.tar.gz"                                                                                                                                           
     SCRIPT_URL: "https://azmphqaedge.astrazeneca.net/public-archives/download/Artifact/weblogic_script.sh"
 
     WEBLOGIC_FILE: fmw_12.2.1.4.0_wls_Disk1_1of1.zip
