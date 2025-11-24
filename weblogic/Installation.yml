@@ -9,12 +9,12 @@
     WLS_USER: weblogic
     TARGET_DIR: /u001/software
     WEBLOGIC_HOME: /u001/wls122156/Middleware/Oracle_Home
-    WEBLOGIC_URL: "https://azmphqaedge.astrazeneca.net/public-archives/download/Artifact/{{WEBLOGIC_VERSION}}"
-    JDK_URL: "https://azmphqaedge.astrazeneca.net/public-archives/download/Artifact/{{JAVA_VERSION}}"                                                                                                                                           
+    WEBLOGIC_URL: "https://azmphqaedge.astrazeneca.net/public-archives/download/Artifact/{{ WEBLOGIC_VERSION }}"
+    JDK_URL: "https://azmphqaedge.astrazeneca.net/public-archives/download/Artifact/{{ JAVA_VERSION }}"                                                                                                                                           
     SCRIPT_URL: "https://azmphqaedge.astrazeneca.net/public-archives/download/Artifact/weblogic_script.sh"
 
-    WEBLOGIC_FILE: {{WEBLOGIC_VERSION}}
-    JDK_FILE: {{JAVA_VERSION}}
+    WEBLOGIC_FILE: {{ WEBLOGIC_VERSION }}
+    JDK_FILE: {{ JAVA_VERSION }}
     SCRIPT_FILE: "{{ TARGET_DIR }}/script.sh"
     JAVA_HOMEPATH: "{{ TARGET_DIR }}/jdk1.8.0_202"
     WEBLOGIC_INSTALLER_PATH: "{{ TARGET_DIR }}/fmw_12.2.1.4.0_wls_lite_generic.jar"
