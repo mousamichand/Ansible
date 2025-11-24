@@ -7,9 +7,9 @@
     WLS_USER: weblogic
     TARGET_DIR: /u001/software
     WEBLOGIC_HOME: /u001/wls122156/Middleware/Oracle_Home
-    WEBLOGIC_URL: "https://stage.morpheusdata.com/public-archives/download/Public%20Install%20Files/fmw_12.2.1.4.0_wls_lite_Disk1_1of1.zip"
-    JDK_URL: "https://stage.morpheusdata.com/public-archives/download/Public%20Install%20Files/jdk-8u202-linux-x64.tar.gz"
-    SCRIPT_URL: "https://stage.morpheusdata.com/public-archives/download/Public%20Install%20Files/weblogic_script.sh"
+    WEBLOGIC_URL: "https://azmphqaedge.astrazeneca.net/public-archives/download/Artifact/fmw_12.2.1.4.0_wls_lite_Disk1_1of1.zip"
+    JDK_URL: "https://azmphqaedge.astrazeneca.net/public-archives/download/Artifact/jdk-8u202-linux-x64.tar.gz"                                                                                                                                           "
+    SCRIPT_URL: "https://azmphqaedge.astrazeneca.net/public-archives/download/Artifact/weblogic_script.sh"
 
     WEBLOGIC_FILE: fmw_12.2.1.4.0_wls_Disk1_1of1.zip
     JDK_FILE: jdk-8u202-linux-x64.tar.gz
