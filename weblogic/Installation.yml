@@ -51,6 +51,7 @@
         dest: "{{ TARGET_DIR }}/{{ WEBLOGIC_FILE }}"
         owner: "{{ WLS_USER }}"
         group: "{{ WLS_USER }}"
+        validate_certs: no
 
     - name: Download JDK tar.gz
       ansible.builtin.get_url:
@@ -58,6 +59,7 @@
         dest: "{{ TARGET_DIR }}/{{ JDK_FILE }}"
         owner: "{{ WLS_USER }}"
         group: "{{ WLS_USER }}"
+        validate_certs: no
 
     - name: Extract WebLogic zip (safe, low memory)
       ansible.builtin.command:
@@ -80,6 +82,7 @@
         mode: "0755"
         owner: "{{ WLS_USER }}"
         group: "{{ WLS_USER }}"
+        validate_certs: no
 
     - name: Update JAVA_HOME in script
       ansible.builtin.replace:
