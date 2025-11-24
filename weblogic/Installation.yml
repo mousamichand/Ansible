@@ -4,8 +4,8 @@
   become: yes
 
   vars:
-    WEBLOGIC_VERSION: "fmw_12.2.1.4.0_wls_lite_Disk1_1of1.zip"
-    JAVA_VERSION: "jdk-8u202-linux-x64.tar.gz"
+    WEBLOGIC_VERSION: "{{ morpheus['customOptions']['WeblogicVersion'] }}"
+    JAVA_VERSION: "{{ morpheus['customOptions']['JavaVersion'] }}"
     WLS_USER: weblogic
     TARGET_DIR: /u001/software
     WEBLOGIC_HOME: /u001/wls122156/Middleware/Oracle_Home
