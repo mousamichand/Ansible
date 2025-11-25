@@ -15,9 +15,15 @@
 
     WEBLOGIC_FILE: "{{ WEBLOGIC_VERSION }}"
     JDK_FILE: "{{ JAVA_VERSION }}"
+    java_home_map:
+      jdk-8u202-linux-x64.tar: "jdk1.8.0_202"
+      jdk-17.0.17_linux-x64_bin.tar: "jdk-17.0.17"
+    weblogic_path:
+      fmw_14.1.2.0.0_wls.zip: "fmw_14.1.2.0.0_wls.jar"
+      fmw_12.2.1.4.0_wls_lite_Disk1_1of1.zip: "fmw_12.2.1.4.0_wls_lite_generic.jar"   
     SCRIPT_FILE: "{{ TARGET_DIR }}/script.sh"
-    JAVA_HOMEPATH: "{{ TARGET_DIR }}/jdk1.8.0_202"
-    WEBLOGIC_INSTALLER_PATH: "{{ TARGET_DIR }}/fmw_12.2.1.4.0_wls_lite_generic.jar"
+    JAVA_HOMEPATH: "{{ TARGET_DIR }}/{{ java_home_map[JAVA_VERSION] }}"
+    WEBLOGIC_INSTALLER_PATH: "{{ TARGET_DIR }}/{{ weblogic_path[WEBLOGIC_VERSION] }}"
 
   tasks:
 
