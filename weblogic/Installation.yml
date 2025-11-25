@@ -9,9 +9,9 @@
     WLS_USER: weblogic
     TARGET_DIR: /u001/software
     WEBLOGIC_HOME: /u001/wls122156/Middleware/Oracle_Home
-    WEBLOGIC_URL: "https://azmphqaedge.astrazeneca.net/public-archives/download/Artifact/{{ WEBLOGIC_VERSION }}"
-    JDK_URL: "https://azmphqaedge.astrazeneca.net/public-archives/download/Artifact/{{ JAVA_VERSION }}"                                                                                                                                           
-    SCRIPT_URL: "https://azmphqaedge.astrazeneca.net/public-archives/download/Artifact/weblogic_script.sh"
+    WEBLOGIC_URL: "https://azmphedge.astrazeneca.net/public-archives/download/Artifact/{{ WEBLOGIC_VERSION }}"
+    JDK_URL: "https://azmphedge.astrazeneca.net/public-archives/download/Artifact/{{ JAVA_VERSION }}"                                                                                                                                           
+    SCRIPT_URL: "https://azmphedge.astrazeneca.net/public-archives/download/Artifact/weblogic_script.sh"
 
     WEBLOGIC_FILE: "{{ WEBLOGIC_VERSION }}"
     JDK_FILE: "{{ JAVA_VERSION }}"
