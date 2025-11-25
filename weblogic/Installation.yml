@@ -74,7 +74,7 @@
         cmd: "unzip -o {{ TARGET_DIR }}/{{ WEBLOGIC_FILE }} -d {{ TARGET_DIR }}"
       become_user: "{{ WLS_USER }}"
       args:
-        creates: "{{ TARGET_DIR }}/fmw_12.2.1.4.0_wls_lite_generic.jar"
+        creates: " {{ WEBLOGIC_INSTALLER_PATH }}"
 
     - name: Extract JDK (safe, low memory)
       ansible.builtin.command:
