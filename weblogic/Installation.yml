@@ -1,5 +1,5 @@
 ---
-- name: Automated WebLogic 12.2 Installer Playbook
+- name: Automated WebLogic  Installer Playbook
   hosts: all
   become: yes
 
