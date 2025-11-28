@@ -21,7 +21,7 @@
   }}
   
     # Determine expected OS major version
-    expected_os_version: >-
+   expected_os_version: >-
   {{
     (
       {% if morpheus['customOptions']['layoutId'] == '584' %}
