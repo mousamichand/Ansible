@@ -1,4 +1,3 @@
----
 - name: Check WebLogic Setup, Version, OS, and JDK
   hosts: all
   become: yes
@@ -10,30 +9,29 @@
 
     # Determine expected OS
     expected_os: >-
-  {{
-    (
-      {% if morpheus['customOptions']['layoutId'] in ['584', '585'] %}
-        'RedHat'
-      {% else %}
-        'OracleLinux'
-      {% endif %}
-    ) | trim
-  }}
-  
+      {{
+        (
+          {% if morpheus['customOptions']['layoutId'] in ['584', '585'] %}
+            'RedHat'
+          {% else %}
+            'OracleLinux'
+          {% endif %}
+        ) | trim
+      }}
+
     # Determine expected OS major version
     expected_os_version: >-
-  {{
-    (
-      {% if morpheus['customOptions']['layoutId'] == '584' %}
-        '8'
-      {% elif morpheus['customOptions']['layoutId'] == '585' %}
-        '9'
-      {% else %}
-        'UNKNOWN'
-      {% endif %}
-    ) | trim
-  }}
-
+      {{
+        (
+          {% if morpheus['customOptions']['layoutId'] == '584' %}
+            '8'
+          {% elif morpheus['customOptions']['layoutId'] == '585' %}
+            '9'
+          {% else %}
+            'UNKNOWN'
+          {% endif %}
+        ) | trim
+      }}
 
     expected_weblogic_version: "{{ morpheus['customOptions']['WeblogicVersion'] }}"
     expected_jdk_path: "{{ morpheus['customOptions']['JavaVersion'] }}"
@@ -47,6 +45,7 @@
       jdk-17.0.17_linux-x64_bin.tar.gz: "17.0.17"
     JAVA_HOME: "{{ java_home_map[expected_jdk_path] }}"
     expected_jdk_version: "{{ java_version_map[expected_jdk_path] }}"
+
   tasks:
 
     - name: Check if WebLogic user exists
