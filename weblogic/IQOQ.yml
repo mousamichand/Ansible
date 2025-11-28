@@ -9,8 +9,8 @@
     weblogic_home: /u001/wls122156/Middleware/Oracle_Home
     expected_os: "Rhel"
     expected_os_version: "9"
-    expected_weblogic_version: "12.1.2.4.0"
-    expected_jdk_version: "1.8.0"
+    expected_weblogic_version: "{{ morpheus['customOptions']['WeblogicVersion'] }}"
+    expected_jdk_version: "{{ morpheus['customOptions']['JavacVersion'] }}"
     JAVA_HOME: "/u001/software/jdk1.8.0_202"
 
   tasks:
