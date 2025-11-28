@@ -11,7 +11,7 @@
     expected_os: >-
       {{
         (
-          {% if morpheus['customOptions']['layoutId'] in ['584', '585'] %}
+          {% if morpheus['customOptions']['layoutId'] == '584' or  morpheus['customOptions']['layoutId'] == '585' %}
             'RedHat'
           {% else %}
             'OracleLinux'
