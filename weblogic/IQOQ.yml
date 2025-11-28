@@ -7,7 +7,7 @@
   vars:
     weblogic_user: weblogic
     weblogic_home: /u001/wls122156/Middleware/Oracle_Home
-    expected_os: "OracleLinux"
+    expected_os: "Rhel"
     expected_os_version: "9"
     expected_weblogic_version: "12.1.2.4.0"
     expected_jdk_version: "1.8.0"
