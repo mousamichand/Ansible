@@ -34,8 +34,8 @@
       jdk-8u202-linux-x64.tar.gz: "/u001/software/jdk1.8.0_202"
       jdk-17.0.17_linux-x64_bin.tar.gz: "/u001/software/jdk-17.0.17"
     java_version_map:
-      jdk-8u202-linux-x64.tar.gz: "jdk1.8.0_202"
-      jdk-17.0.17_linux-x64_bin.tar.gz: "jdk-17.0.17"
+      jdk-8u202-linux-x64.tar.gz: "1.8.0_202"
+      jdk-17.0.17_linux-x64_bin.tar.gz: "17.0.17"
     JAVA_HOME: "{{ java_home_map[expected_jdk_path] }}"
     expected_jdk_version: "{{ java_version_map[expected_jdk_path] }}"
   tasks:
