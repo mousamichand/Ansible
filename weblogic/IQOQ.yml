@@ -9,7 +9,7 @@
     weblogic_home: /u001/wls122156/Middleware/Oracle_Home
 
     # Determine expected OS
-   expected_os: >-
+    expected_os: >-
   {{
     (
       {% if morpheus['customOptions']['layoutId'] in ['584', '585'] %}
@@ -21,7 +21,7 @@
   }}
   
     # Determine expected OS major version
-   expected_os_version: >-
+    expected_os_version: >-
   {{
     (
       {% if morpheus['customOptions']['layoutId'] == '584' %}
