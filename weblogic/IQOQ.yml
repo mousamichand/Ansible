@@ -7,8 +7,19 @@
   vars:
     weblogic_user: weblogic
     weblogic_home: /u001/wls122156/Middleware/Oracle_Home
-    expected_os: "Rhel"
-    expected_os_version: "9"
+    expected_os: >-
+  {% if morpheus['customOptions']['layoutId'] == '584' or or morpheus['customOptions']['layoutId'] == '585' %}
+    RedHat
+  {% else %}
+   OracleLinux
+  {% endif %}
+
+expected_os_version: >-
+  {% if morpheus['customOptions']['layoutId'] == '584' %}
+    8
+  {% elif morpheus['customOptions']['layoutId'] == '585' %}
+  9
+  {% endif %}
     expected_weblogic_version: "{{ morpheus['customOptions']['WeblogicVersion'] }}"
     expected_jdk_version: "{{ morpheus['customOptions']['JavacVersion'] }}"
     JAVA_HOME: "/u001/software/jdk1.8.0_202"
