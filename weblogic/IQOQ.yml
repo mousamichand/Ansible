@@ -9,22 +9,31 @@
     weblogic_home: /u001/wls122156/Middleware/Oracle_Home
 
     # Determine expected OS
-    expected_os: >-
+   expected_os: >-
+  {{
+    (
       {% if morpheus['customOptions']['layoutId'] in ['584', '585'] %}
-        RedHat
+        'RedHat'
       {% else %}
-        OracleLinux
+        'OracleLinux'
       {% endif %}
-
+    ) | trim
+  }}
+  
     # Determine expected OS major version
     expected_os_version: >-
+  {{
+    (
       {% if morpheus['customOptions']['layoutId'] == '584' %}
-        8
+        '8'
       {% elif morpheus['customOptions']['layoutId'] == '585' %}
-        9
+        '9'
       {% else %}
-        UNKNOWN
+        'UNKNOWN'
       {% endif %}
+    ) | trim
+  }}
+
 
     expected_weblogic_version: "{{ morpheus['customOptions']['WeblogicVersion'] }}"
     expected_jdk_path: "{{ morpheus['customOptions']['JavaVersion'] }}"
